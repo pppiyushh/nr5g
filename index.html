@@ -12,558 +12,158 @@
     <meta name="author" content="Piyush Kumar Singh">
 
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                         Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #222;
-            background: #ffffff;
-        }
-
-        a {
-            color: #1769aa;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* ---------- Header ---------- */
-
-        header {
-            border-bottom: 1px solid #e5e5e5;
-            background: #ffffff;
-        }
-
-        .nav {
-            max-width: 1100px;
-            margin: auto;
-            padding: 18px 24px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: #111;
-        }
-
-        .logo span {
-            color: #1769aa;
-        }
-
-        nav a {
-            margin-left: 24px;
-            font-size: 0.95rem;
-            color: #444;
-        }
-
-        /* ---------- Hero ---------- */
-
-        .hero {
-            max-width: 1100px;
-            margin: auto;
-            padding: 90px 24px 75px;
-        }
-
-        .hero h1 {
-            font-size: 3.2rem;
-            line-height: 1.15;
-            max-width: 800px;
-            letter-spacing: -1.5px;
-            margin-bottom: 22px;
-        }
-
-        .hero h1 span {
-            color: #1769aa;
-        }
-
-        .hero p {
-            max-width: 750px;
-            font-size: 1.15rem;
-            color: #555;
-            margin-bottom: 30px;
-        }
-
-        .buttons a {
-            display: inline-block;
-            padding: 11px 20px;
-            margin-right: 10px;
-            border: 1px solid #1769aa;
-            border-radius: 5px;
-            font-size: 0.95rem;
-        }
-
-        .button-primary {
-            background: #1769aa;
-            color: white;
-        }
-
-        .button-secondary {
-            color: #1769aa;
-        }
-
-        /* ---------- Sections ---------- */
-
-        section {
-            max-width: 1100px;
-            margin: auto;
-            padding: 65px 24px;
-        }
-
-        section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            color: #111;
-        }
-
-        .section-intro {
-            color: #666;
-            max-width: 750px;
-            margin-bottom: 35px;
-        }
-
-        /* ---------- Cards ---------- */
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .card {
-            border: 1px solid #e4e4e4;
-            border-radius: 7px;
-            padding: 25px;
-            background: #fff;
-        }
-
-        .card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            color: #111;
-        }
-
-        .card p {
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        .card a {
-            display: inline-block;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-
-        /* ---------- About ---------- */
-
-        .about {
-            background: #f7f8fa;
-            max-width: none;
-        }
-
-        .about-content {
-            max-width: 1100px;
-            margin: auto;
-            padding: 65px 24px;
-        }
-
-        .about-content p {
-            max-width: 800px;
-            color: #555;
-        }
-
-        /* ---------- Footer ---------- */
-
-        footer {
-            border-top: 1px solid #e5e5e5;
-            padding: 30px 24px;
-            text-align: center;
-            color: #777;
-            font-size: 0.9rem;
-        }
-
-        /* ---------- Mobile ---------- */
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #222; background: #ffffff; }
+        a { color: #1769aa; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        header { border-bottom: 1px solid #e5e5e5; background: #ffffff; }
+        .nav { max-width: 1100px; margin: auto; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; color: #111; }
+        .logo span { color: #1769aa; }
+        nav a { margin-left: 24px; font-size: 0.95rem; color: #444; }
+        .hero { max-width: 1100px; margin: auto; padding: 90px 24px 75px; }
+        .hero h1 { font-size: 3.2rem; line-height: 1.15; max-width: 800px; letter-spacing: -1.5px; margin-bottom: 22px; }
+        .hero h1 span { color: #1769aa; }
+        .hero p { max-width: 750px; font-size: 1.15rem; color: #555; margin-bottom: 30px; }
+        .buttons a { display: inline-block; padding: 11px 20px; margin-right: 10px; border: 1px solid #1769aa; border-radius: 5px; font-size: 0.95rem; }
+        .button-primary { background: #1769aa; color: white; }
+        .button-secondary { color: #1769aa; }
+        section { max-width: 1100px; margin: auto; padding: 65px 24px; }
+        section h2 { font-size: 1.8rem; margin-bottom: 12px; color: #111; }
+        .section-intro { color: #666; max-width: 750px; margin-bottom: 35px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .card { border: 1px solid #e4e4e4; border-radius: 7px; padding: 25px; background: #fff; }
+        .card h3 { font-size: 1.1rem; margin-bottom: 10px; color: #111; }
+        .card p { color: #666; font-size: 0.95rem; }
+        .card a { display: inline-block; margin-top: 15px; font-size: 0.9rem; }
+        .about { background: #f7f8fa; max-width: none; }
+        .about-content { max-width: 1100px; margin: auto; padding: 65px 24px; }
+        .about-content p { max-width: 800px; color: #555; }
+        footer { border-top: 1px solid #e5e5e5; padding: 30px 24px; text-align: center; color: #777; font-size: 0.9rem; }
         @media (max-width: 800px) {
-
-            .nav {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            nav a {
-                margin: 0 8px;
-            }
-
-            .hero {
-                padding-top: 60px;
-            }
-
-            .hero h1 {
-                font-size: 2.3rem;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
+            .nav { flex-direction: column; gap: 12px; }
+            nav a { margin: 0 8px; }
+            .hero { padding-top: 60px; }
+            .hero h1 { font-size: 2.3rem; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-
 <body>
-
 <header>
     <div class="nav">
-
-        <div class="logo">
-            NR<span>5G</span>
-        </div>
-
+        <div class="logo">NR<span>5G</span></div>
         <nav>
             <a href="#topics">Topics</a>
             <a href="#research">Research</a>
             <a href="#projects">Projects</a>
             <a href="#about">About</a>
-            <a href="https://github.com/pppiyushh"
-               target="_blank"
-               rel="noopener noreferrer">
-                GitHub
-            </a>
+            <a href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-
     </div>
 </header>
-
-
 <main>
-
-    <!-- ================= HERO ================= -->
-
     <section class="hero">
-
-        <h1>
-            Understanding
-            <span>5G, 6G & Wireless Systems</span>
-            from the implementation level.
-        </h1>
-
-        <p>
-            Technical notes, research ideas and engineering projects covering
-            5G NR, physical-layer systems, NTN, DSP, embedded software and
-            emerging 6G technologies.
-        </p>
-
+        <h1>Understanding <span>5G, 6G & Wireless Systems</span> from the implementation level.</h1>
+        <p>Technical notes, research ideas and engineering projects covering 5G NR, physical-layer systems, NTN, DSP, embedded software and emerging 6G technologies.</p>
         <div class="buttons">
-
-            <a class="button-primary" href="#topics">
-                Explore Topics
-            </a>
-
-            <a class="button-secondary"
-               href="https://github.com/pppiyushh"
-               target="_blank"
-               rel="noopener noreferrer">
-                View GitHub
-            </a>
-
+            <a class="button-primary" href="#topics">Explore Topics</a>
+            <a class="button-secondary" href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">View GitHub</a>
         </div>
-
     </section>
-
-
-    <!-- ================= TOPICS ================= -->
 
     <section id="topics">
-
         <h2>Technical Topics</h2>
-
-        <p class="section-intro">
-            Implementation-oriented explanations of technologies used in
-            modern wireless communication systems.
-        </p>
-
+        <p class="section-intro">Implementation-oriented explanations of technologies used in modern wireless communication systems.</p>
         <div class="grid">
-
             <div class="card">
                 <h3>5G NR</h3>
-
-                <p>
-                    NR architecture, PHY, RRC, MAC, RLC, PDCP, SDAP,
-                    RACH, SSB, HARQ, channel coding and modem operation.
-                </p>
-
-                <a href="#">
-                    Explore 5G NR →
-                </a>
+                <p>NR architecture, PHY, RRC, MAC, RLC, PDCP, SDAP, RACH, SSB, HARQ, channel coding and modem operation.</p>
+                <a href="#">Explore 5G NR →</a>
             </div>
-
-
             <div class="card">
                 <h3>Physical Layer</h3>
-
-                <p>
-                    OFDM, FFT, cyclic prefix, MIMO, beamforming,
-                    modulation, channel estimation and PHY processing.
-                </p>
-
-                <a href="#">
-                    Explore PHY →
-                </a>
+                <p>OFDM, FFT, cyclic prefix, MIMO, beamforming, modulation, channel estimation and PHY processing.</p>
+                <a href="#">Explore PHY →</a>
             </div>
-
-
             <div class="card">
                 <h3>DSP</h3>
-
-                <p>
-                    Digital signal processing concepts relevant to
-                    wireless communication and real-world modem systems.
-                </p>
-
-                <a href="#">
-                    Explore DSP →
-                </a>
+                <p>Digital signal processing concepts relevant to wireless communication and real-world modem systems.</p>
+                <a href="#">Explore DSP →</a>
             </div>
-
-
             <div class="card">
                 <h3>NTN & Satellite</h3>
-
-                <p>
-                    5G NR-NTN, satellite positioning, SIB19,
-                    propagation challenges and future satellite networks.
-                </p>
-
-                <a href="#">
-                    Explore NTN →
-                </a>
+                <p>5G NR-NTN, satellite positioning, SIB19, propagation challenges and future satellite networks.</p>
+                <a href="#">Explore NTN →</a>
             </div>
-
-
             <div class="card">
                 <h3>6G</h3>
-
-                <p>
-                    AI-native networks, RIS, integrated sensing,
-                    next-generation NTN and emerging 6G architectures.
-                </p>
-
-                <a href="#">
-                    Explore 6G →
-                </a>
+                <p>AI-native networks, cell-free architectures, RIS, integrated sensing, next-generation NTN and emerging 6G technologies.</p>
+                <a href="6G/Cell-Free%20Networks.md">Explore 6G →</a>
             </div>
-
-
             <div class="card">
                 <h3>Embedded Systems</h3>
-
-                <p>
-                    C programming, firmware, bootloaders, low-level
-                    debugging, Linux and systems programming.
-                </p>
-
-                <a href="#">
-                    Explore Embedded →
-                </a>
+                <p>C programming, firmware, bootloaders, low-level debugging, Linux and systems programming.</p>
+                <a href="#">Explore Embedded →</a>
             </div>
-
         </div>
-
     </section>
-
-
-    <!-- ================= RESEARCH ================= -->
 
     <section id="research">
-
         <h2>Research & Technical Notes</h2>
-
-        <p class="section-intro">
-            Deeper technical investigations into problems at the intersection
-            of wireless communication, embedded systems and future networks.
-        </p>
-
+        <p class="section-intro">Deeper technical investigations into problems at the intersection of wireless communication, embedded systems and future networks.</p>
         <div class="grid">
-
             <div class="card">
-
                 <h3>5G NR Implementation</h3>
-
-                <p>
-                    Understanding how specifications translate into
-                    actual modem software and system behavior.
-                </p>
-
-                <a href="#">
-                    Read research →
-                </a>
-
+                <p>Understanding how specifications translate into actual modem software and system behavior.</p>
+                <a href="#">Read research →</a>
             </div>
-
-
             <div class="card">
-
                 <h3>Satellite Communication</h3>
-
-                <p>
-                    Technical exploration of NR-NTN, satellite mobility,
-                    timing, positioning and future satellite networks.
-                </p>
-
-                <a href="#">
-                    Read research →
-                </a>
-
+                <p>Technical exploration of NR-NTN, satellite mobility, timing, positioning and future satellite networks.</p>
+                <a href="#">Read research →</a>
             </div>
-
-
             <div class="card">
-
                 <h3>6G Research</h3>
-
-                <p>
-                    Exploring emerging architectures and technologies
-                    that could shape future wireless systems.
-                </p>
-
-                <a href="#">
-                    Read research →
-                </a>
-
+                <p>Exploring emerging architectures and technologies that could shape future wireless systems.</p>
+                <a href="6G/Cell-Free%20Networks.md">Cell-Free Networks →</a>
             </div>
-
         </div>
-
     </section>
-
-
-    <!-- ================= PROJECTS ================= -->
 
     <section id="projects">
-
         <h2>Engineering Projects</h2>
-
-        <p class="section-intro">
-            Open-source projects and experiments focused on understanding
-            wireless systems and low-level software through implementation.
-        </p>
-
+        <p class="section-intro">Open-source projects and experiments focused on understanding wireless systems and low-level software through implementation.</p>
         <div class="grid">
-
             <div class="card">
-
                 <h3>Software USIM Emulator</h3>
-
-                <p>
-                    A C-based software USIM emulator exploring SIM/USIM
-                    architecture, authentication and modem interaction.
-                </p>
-
-                <a href="https://github.com/pppiyushh/SW_USIM_emulator"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    View project →
-                </a>
-
+                <p>A C-based software USIM emulator exploring SIM/USIM architecture, authentication and modem interaction.</p>
+                <a href="https://github.com/pppiyushh/SW_USIM_emulator" target="_blank" rel="noopener noreferrer">View project →</a>
             </div>
-
-
             <div class="card">
-
                 <h3>5G NR & 6G Research</h3>
-
-                <p>
-                    Technical implementations, experiments and documentation
-                    related to 5G NR and emerging 6G technologies.
-                </p>
-
-                <a href="https://github.com/pppiyushh/5GNR_nd_6G"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    View project →
-                </a>
-
+                <p>Technical implementations, experiments and documentation related to 5G NR and emerging 6G technologies.</p>
+                <a href="https://github.com/pppiyushh/5GNR_nd_6G" target="_blank" rel="noopener noreferrer">View project →</a>
             </div>
-
-
             <div class="card">
-
                 <h3>Low-Level Firmware</h3>
-
-                <p>
-                    Experiments with firmware, bootloaders, memory,
-                    I/O and low-level software development.
-                </p>
-
-                <a href="https://github.com/pppiyushh/low-level-firmware-experiments"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    View project →
-                </a>
-
+                <p>Experiments with firmware, bootloaders, memory, I/O and low-level software development.</p>
+                <a href="https://github.com/pppiyushh/low-level-firmware-experiments" target="_blank" rel="noopener noreferrer">View project →</a>
             </div>
-
         </div>
-
     </section>
 
-
-    <!-- ================= ABOUT ================= -->
-
     <div class="about" id="about">
-
         <div class="about-content">
-
             <h2>About NR5G</h2>
-
-            <p>
-                NR5G is a technical knowledge and research platform focused
-                on understanding modern wireless communication systems from
-                both the theoretical and implementation perspectives.
-            </p>
-
+            <p>NR5G is a technical knowledge and research platform focused on understanding modern wireless communication systems from both the theoretical and implementation perspectives.</p>
             <br>
-
-            <p>
-                The goal is to bridge the gap between 3GPP specifications,
-                academic research and the software running inside real
-                communication systems.
-            </p>
-
+            <p>The goal is to bridge the gap between 3GPP specifications, academic research and the software running inside real communication systems.</p>
             <br>
-
-            <p>
-                The platform is maintained by
-                <strong>Piyush Kumar Singh</strong>, a software engineer
-                working on NR5G Layer-1 modem development.
-            </p>
-
+            <p>The platform is maintained by <strong>Piyush Kumar Singh</strong>, a software engineer working on NR5G Layer-1 modem development.</p>
         </div>
-
     </div>
-
 </main>
-
-
-<footer>
-
-    © 2026 NR5G.com
-    &nbsp;·&nbsp;
-    Technical notes on 5G, 6G and wireless systems
-
-</footer>
-
+<footer>© 2026 NR5G.com &nbsp;·&nbsp; Technical notes on 5G, 6G and wireless systems</footer>
 </body>
 </html>
