@@ -15,7 +15,7 @@
             <a href="{{ '/#topics' | relative_url }}">Topics</a>
             <a href="{{ '/#research' | relative_url }}">Research</a>
             <a href="{{ '/6G/' | relative_url }}">6G</a>
-            <a href="{{ '/rf-materials/' | relative_url }}">RF Materials</a>
+            <a href="{{ '/Research/rf-materials/' | relative_url }}">RF Materials</a>
             <a href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
     </div>
@@ -38,7 +38,8 @@
         </div>
         <div class="sidebar-group">
             <strong>RF Materials</strong>
-            <a href="{{ '/rf-materials/' | relative_url }}">RF Materials & Propagation</a>
+            <a class="{% if page.url contains 'materials-and-propagation' %}active{% endif %}" href="{{ '/Research/rf-materials/materials-and-propagation.html' | relative_url }}">Materials & Propagation</a>
+            <a class="{% if page.url contains 'protective-fabrics' %}active{% endif %}" href="{{ '/Research/rf-materials/protective-fabrics.html' | relative_url }}">RF-Shielding Fabrics</a>
         </div>
     </aside>
 
