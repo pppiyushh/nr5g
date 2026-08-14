@@ -58,6 +58,6 @@ For every requested change:
 3. show the user the proposed diff when requested
 4. commit only after explicit approval unless the user has explicitly asked for a direct update
 
-Commit messages must not contain `Codex` or any other AI attribution unless the user explicitly requests it for that specific commit.
+Responses, change summaries, source files and commit messages must not contain AI attribution unless the user explicitly requests it for that specific instance.
 
 Never expose proprietary employer information.
