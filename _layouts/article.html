@@ -6,6 +6,12 @@
     <title>{{ page.title }} | NR5G</title>
     <meta name="description" content="{{ page.description | default: page.title }}">
     <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+    {% if page.math %}
+    <script>
+        window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    {% endif %}
 </head>
 <body>
 <header>
@@ -15,6 +21,7 @@
             <a href="{{ '/#topics' | relative_url }}">Topics</a>
             <a href="{{ '/#research' | relative_url }}">Research</a>
             <a href="{{ '/6G/' | relative_url }}">6G</a>
+            <a href="{{ '/NTN/' | relative_url }}">NR NTN</a>
             <a href="{{ '/Research/rf-materials/' | relative_url }}">RF Materials</a>
             <a href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
@@ -35,6 +42,10 @@
         <div class="sidebar-group">
             <strong>AI & RF Hardware</strong>
             <a class="{% if page.url contains 'inverse-designed-rfics' %}active{% endif %}" href="{{ '/Research/inverse-designed-rfics.html' | relative_url }}">Inverse-Designed RFICs</a>
+        </div>
+        <div class="sidebar-group">
+            <strong>NR NTN</strong>
+            <a class="{% if page.url contains '/NTN/nr-ntn' %}active{% endif %}" href="{{ '/NTN/nr-ntn.html' | relative_url }}">NR over Satellite</a>
         </div>
         <div class="sidebar-group">
             <strong>RF Materials</strong>

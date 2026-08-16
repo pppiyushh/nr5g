@@ -273,8 +273,31 @@ footer {
 .article-body ul,
 .article-body ol,
 .article-body blockquote,
-.article-body pre {
+.article-body pre,
+.article-body table {
     margin-bottom: 18px;
+}
+
+.article-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.94rem;
+}
+
+.article-body th,
+.article-body td {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.article-body th {
+    background: var(--soft-bg);
+}
+
+.article-body code {
+    overflow-wrap: anywhere;
 }
 
 .article-body ul,
@@ -351,5 +374,9 @@ footer {
 
     .article-content h1 {
         font-size: 2.1rem;
+    }
+
+    .article-body {
+        overflow-x: auto;
     }
 }
