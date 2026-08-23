@@ -18,8 +18,9 @@
     <div class="nav">
         <a class="logo" href="{{ '/' | relative_url }}">NR<span>5G</span></a>
         <nav>
-            <a href="{{ '/#topics' | relative_url }}">Topics</a>
+            <a href="{{ '/#foundations' | relative_url }}">Foundations</a>
             <a href="{{ '/#research' | relative_url }}">Research</a>
+            <a href="{{ '/5G/' | relative_url }}">5G NR</a>
             <a href="{{ '/6G/' | relative_url }}">6G</a>
             <a href="{{ '/NTN/' | relative_url }}">NR NTN</a>
             <a href="{{ '/Research/rf-materials/' | relative_url }}">RF Materials</a>
@@ -30,7 +31,11 @@
 
 <div class="article-shell">
     <aside class="article-sidebar">
-        <h3>Research Map</h3>
+        <h3>Knowledge Map</h3>
+        <div class="sidebar-group">
+            <strong>5G NR Physical Layer</strong>
+            <a class="{% if page.url contains 'mimo-channel-estimation' %}active{% endif %}" href="{{ '/5G/physical-layer/mimo-channel-estimation.html' | relative_url }}">MIMO & Channel Estimation</a>
+        </div>
         <div class="sidebar-group">
             <strong>6G Architecture</strong>
             <a class="{% if page.url contains 'cell-free-networks' %}active{% endif %}" href="{{ '/6G/architecture/cell-free-networks.html' | relative_url }}">Cell-Free Networks</a>
