@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5G NR Physical Layer | NR5G</title>
-    <meta name="description" content="Implementation-oriented foundations for 5G NR physical-layer engineering, including MIMO, OFDM, reference signals and channel estimation.">
+    <title>5G NR Engineering | NR5G</title>
+    <meta name="description" content="Implementation-oriented foundations for 5G NR physical-layer engineering, protocol conformance, modem certification and commercial network behavior.">
     <link rel="stylesheet" href="../assets/css/site.css">
 </head>
 <body>
@@ -25,20 +25,25 @@
 <main>
     <section class="hero topic-hero">
         <div class="topic-label">Engineering Foundation</div>
-        <h1>5G NR <span>Physical Layer</span></h1>
+        <h1>5G NR <span>Engineering</span></h1>
         <p>
-            From signal models and reference-signal resource elements to the RF, compute and channel conditions that determine what a real NR modem can achieve.
+            From signal models and reference-signal resource elements to protocol conformance, certification and the RF, compute and channel conditions that determine what a real NR modem can achieve.
         </p>
     </section>
 
     <section>
-        <h2>Start with the channel matrix</h2>
-        <p class="section-intro">The first foundation derives why MIMO can carry parallel spatial streams, then follows the result into NR channel estimation and practical hardware limits.</p>
+        <h2>From radio algorithms to commercial devices</h2>
+        <p class="section-intro">These foundations connect signal processing and protocol requirements to what real modem implementations, test laboratories and networks actually verify.</p>
         <div class="grid">
             <div class="card">
                 <h3>MIMO and NR Channel Estimation</h3>
                 <p>The MIMO capacity proof, singular spatial modes, DM-RS and CSI-RS inside NR slots, LS/LMMSE estimation, channel aging and hardware-constrained arrays.</p>
                 <a href="physical-layer/mimo-channel-estimation.html">Build MIMO from first principles →</a>
+            </div>
+            <div class="card">
+                <h3>Who Verifies a Commercial Modem?</h3>
+                <p>Why 3GPP writes testable requirements but does not certify products, what regulatory, GCF, PTCRB and operator testing cover, and how a non-conforming modem can still reach users.</p>
+                <a href="standards/modem-conformance.html">Follow the verification chain →</a>
             </div>
         </div>
     </section>

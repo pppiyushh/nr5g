@@ -5,6 +5,8 @@ section: NR NTN
 section_url: /NTN/
 description: How 5G NR operates through satellites, how a UE tracks satellite position and velocity, and why GEO and LEO require different timing, Doppler and mobility strategies.
 math: true
+next_title: SIB19, Epoch Time and Timing Advance
+next_url: /NTN/timing-advance-and-epoch-time.html
 ---
 
 ## 1. The problem: NR was designed around a nearly stationary cell

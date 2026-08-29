@@ -311,6 +311,40 @@ footer {
     color: #444;
 }
 
+.article-body .mermaid {
+    margin: 26px 0;
+    padding: 18px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #fff;
+    text-align: center;
+}
+
+.article-body .technical-callout {
+    margin: 24px 0;
+    padding: 18px 20px;
+    border: 1px solid #bdd6ea;
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    background: #f4f9fd;
+}
+
+.article-body .technical-callout p:last-child {
+    margin-bottom: 0;
+}
+
+.article-body .geometry-diagram {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 24px auto;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: #fbfcfe;
+}
+
 .article-body pre {
     overflow-x: auto;
     padding: 18px;

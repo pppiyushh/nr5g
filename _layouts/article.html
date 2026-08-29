@@ -12,6 +12,12 @@
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     {% endif %}
+    {% if page.mermaid %}
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'strict' });
+    </script>
+    {% endif %}
 </head>
 <body>
 <header>
@@ -35,6 +41,7 @@
         <div class="sidebar-group">
             <strong>5G NR Physical Layer</strong>
             <a class="{% if page.url contains 'mimo-channel-estimation' %}active{% endif %}" href="{{ '/5G/physical-layer/mimo-channel-estimation.html' | relative_url }}">MIMO & Channel Estimation</a>
+            <a class="{% if page.url contains 'modem-conformance' %}active{% endif %}" href="{{ '/5G/standards/modem-conformance.html' | relative_url }}">Who Verifies a Modem?</a>
         </div>
         <div class="sidebar-group">
             <strong>6G Architecture</strong>
@@ -51,6 +58,8 @@
         <div class="sidebar-group">
             <strong>NR NTN</strong>
             <a class="{% if page.url contains '/NTN/nr-ntn' %}active{% endif %}" href="{{ '/NTN/nr-ntn.html' | relative_url }}">NR over Satellite</a>
+            <a class="{% if page.url contains 'timing-advance-and-epoch-time' %}active{% endif %}" href="{{ '/NTN/timing-advance-and-epoch-time.html' | relative_url }}">Timing Advance & Epoch</a>
+            <a class="{% if page.url contains 'leo-orbits-beams-and-elevation' %}active{% endif %}" href="{{ '/NTN/leo-orbits-beams-and-elevation.html' | relative_url }}">LEO Orbits, Beams & Elevation</a>
         </div>
         <div class="sidebar-group">
             <strong>RF Materials</strong>
