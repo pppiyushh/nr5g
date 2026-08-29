@@ -58,81 +58,81 @@ The total network-side timing term can therefore contain more than the UE-to-sat
 
 The commonly used acronym is **ECEF: Earth-Centered, Earth-Fixed**, not “ECFS.” Its origin is at Earth's centre of mass and its axes rotate with Earth:
 
-- (x): from Earth's centre toward the equator at longitude (0^\circ);
-- (y): toward the equator at longitude (90^\circ\) east;
-- (z): toward the conventional north pole.
+- \\(x\\): from Earth's centre toward the equator at longitude \\(0^\circ\\);
+- \\(y\\): toward the equator at longitude \\(90^\circ\\) east;
+- \\(z\\): toward the conventional north pole.
 
 The conventional Cartesian state order is
 
-\[
+\\[
 \mathbf{s}(t_0)=
 [x,\;y,\;z,\;v_x,\;v_y,\;v_z]^{\mathsf T},
-\]
+\\]
 
-where position is in metres, velocity is in metres per second, and both correspond to the same epoch (t_0). An (x,z,y) ordering is not another coordinate system; it is a field-ordering choice that must be documented and converted before using standard equations.
+where position is in metres, velocity is in metres per second, and both correspond to the same epoch \\(t_0\\). An \\((x,z,y)\\) ordering is not another coordinate system; it is a field-ordering choice that must be documented and converted before using standard equations.
 
 In 3GPP RRC signalling, `ephemerisInfo` can describe the satellite using either a position/velocity state vector or orbital parameters. The state-vector position and velocity are expressed in ECEF; the orbital-element representation is associated with an inertial frame. `epochTime` binds the ephemeris to a radio time. A receiver must never propagate a state without knowing its frame, units and epoch.
 
 ### 4.1 UE position in the same frame
 
-A GNSS receiver normally provides geodetic latitude (\varphi), longitude (\lambda) and ellipsoidal height (h). Using the WGS-84 ellipsoid,
+A GNSS receiver normally provides geodetic latitude \\(\varphi\\), longitude \\(\lambda\\) and ellipsoidal height \\(h\\). Using the WGS-84 ellipsoid,
 
-\[
+\\[
 N(\varphi)=\frac{a}{\sqrt{1-e^2\sin^2\varphi}},
-\]
+\\]
 
-\[
+\\[
 \begin{aligned}
 x_u &= (N+h)\cos\varphi\cos\lambda,\\
 y_u &= (N+h)\cos\varphi\sin\lambda,\\
 z_u &= (N(1-e^2)+h)\sin\varphi.
 \end{aligned}
-\]
+\\]
 
 Now the UE and satellite occupy one frame and can be subtracted safely.
 
 ### 4.2 Line of sight, range and propagation delay
 
-For satellite position \(\mathbf r_s\) and UE position \(\mathbf r_u\),
+For satellite position \\(\mathbf r_s\\) and UE position \\(\mathbf r_u\\),
 
-\[
+\\[
 \boldsymbol\rho=\mathbf r_s-\mathbf r_u,\qquad
 R=\|\boldsymbol\rho\|,\qquad
 \hat{\boldsymbol\rho}=\frac{\boldsymbol\rho}{R}.
-\]
+\\]
 
 The service-link one-way geometric delay is approximately
 
-\[
+\\[
 \tau_{SL}=\frac{R}{c}.
-\]
+\\]
 
 This is not automatically the complete end-to-end or round-trip delay: a transparent payload also has a feeder path, and implementations add processing and scheduling latency.
 
 ### 4.3 Range rate and Doppler
 
-With satellite velocity \(\mathbf v_s\) and UE velocity \(\mathbf v_u\), the instantaneous radial range rate is
+With satellite velocity \\(\mathbf v_s\\) and UE velocity \\(\mathbf v_u\\), the instantaneous radial range rate is
 
-\[
+\\[
 \dot R=(\mathbf v_s-\mathbf v_u)\cdot\hat{\boldsymbol\rho}.
-\]
+\\]
 
 Under one common sign convention, the first-order received-frequency offset is
 
-\[
+\\[
 f_D=-\frac{\dot R}{c}f_c.
-\]
+\\]
 
 The sign convention must be stated in software and test vectors. The physical result is simple: closing range raises received frequency and opening range lowers it. NR NTN UEs use their location and broadcast satellite ephemeris to pre-compensate service-link delay and Doppler before and during connection.
 
 ### 4.4 Visibility and elevation
 
-The line-of-sight vector can be rotated from ECEF into the UE's local East-North-Up (ENU) frame. If the result is \([e,n,u]\),
+The line-of-sight vector can be rotated from ECEF into the UE's local East-North-Up (ENU) frame. If the result is \\([e,n,u]\\),
 
-\[
+\\[
 \text{azimuth}=\operatorname{atan2}(e,n),\qquad
 \text{elevation}=\operatorname{atan2}\!\left(u,\sqrt{e^2+n^2}\right).
-\]
+\\]
 
 A practical tracker applies an elevation mask rather than treating every point above the mathematical horizon as usable. Low elevation increases slant range, clutter loss, atmospheric path length and blockage risk.
 

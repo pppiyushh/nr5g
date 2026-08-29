@@ -124,7 +124,7 @@ A product may also be sold in a market or private deployment that does not requi
 
 ## 5. Example: UE intentionally transmits in the wrong UL slot
 
-Suppose the gNB sends an UL grant scheduling PUSCH in slot \(n+k_2\), but the UE transmits the PUSCH one slot early.
+Suppose the gNB sends an UL grant scheduling PUSCH in slot \\(n+k_2\\), but the UE transmits the PUSCH one slot early.
 
 ### At the gNB PHY
 

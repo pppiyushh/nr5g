@@ -22,12 +22,12 @@ NR-NTN timing becomes much easier once three terms are kept separate:
 
 In the simplified time domain,
 
-\[
+\\[
 T_{TA}\approx RTT_{UE\leftrightarrow satellite}
           +RTT_{satellite\leftrightarrow RP}
           +T_{residual}
           +T_{fixed}.
-\]
+\\]
 
 `k_mac` is not another propagation term added to the transmitted waveform. It describes the timing relationship between the RP and gNB when they are not colocated.
 
@@ -82,25 +82,25 @@ The one-way delays are:
 
 Therefore:
 
-\[
+\\[
 TA_{common}=RTT_{RP\leftrightarrow satellite}=2\text{ ms},
-\]
+\\]
 
-\[
+\\[
 TA_{UE}=RTT_{satellite\leftrightarrow UE}=4\text{ ms},
-\]
+\\]
 
-\[
+\\[
 T_{TA}=TA_{common}+TA_{UE}=6\text{ ms}.
-\]
+\\]
 
 The RP-to-gNB RTT is approximately 2 ms, so the network may configure
 
-\[
+\\[
 k_{mac}\approx 2\text{ ms}.
-\]
+\\]
 
-The purpose of \(k_{mac}\) is to repair protocol timing when the DL and UL frames are aligned at the RP but not at the gNB. It is used, for example, in NTN random-access response-window timing and MAC-command application timing. It is not added to the 6 ms radio timing advance.
+The purpose of \\(k_{mac}\\) is to repair protocol timing when the DL and UL frames are aligned at the RP but not at the gNB. It is used, for example, in NTN random-access response-window timing and MAC-command application timing. It is not added to the 6 ms radio timing advance.
 
 ## 4. How the UE knows the current SFN before reading SIB19
 
@@ -113,9 +113,9 @@ An SS/PBCH block contains PSS, SSS and PBCH:
 
 Suppose the current SFN is decimal 99:
 
-\[
+\\[
 99_{10}=0001100011_2.
-\]
+\\]
 
 The UE obtains:
 
@@ -156,9 +156,9 @@ It is not GPS time, UTC or a timestamp in seconds since an epoch. It is a label 
 
 Suppose SIB19 is transmitted in SFN 90/subframe 2 and identifies SFN 100/subframe 0 as its epoch. The epoch is
 
-\[
+\\[
 (100-90)\times10\text{ ms}+(0-2)\times1\text{ ms}=98\text{ ms}
-\]
+\\]
 
 in the future.
 
@@ -185,37 +185,37 @@ The UE uses that received DL frame as its local downlink timing reference and ad
 
 3GPP expresses the one-way RP-to-satellite delay using the decoded SIB19 parameters:
 
-\[
+\\[
 d_{common}(t)=
 \frac{TA_{common,0}}{2}
 +\frac{D}{2}\Delta t
 +\frac{V}{2}\Delta t^2,
-\]
+\\]
 
 or equivalently,
 
-\[
+\\[
 d_{common}(t)=
 \frac{TA_{common,0}+D\Delta t+V\Delta t^2}{2}.
-\]
+\\]
 
 | Term | Meaning | Unit |
 |---|---|---:|
-| \(TA_{common,0}\) | RP↔satellite RTT at epoch | µs |
-| \(D\) | rate of change of Common RTT | µs/s |
-| \(V\) | quadratic drift coefficient | µs/s² |
-| \(\Delta t=t-t_{epoch}\) | elapsed time relative to epoch | s |
-| \(d_{common}(t)\) | current one-way RP→satellite delay | µs |
+| \\(TA_{common,0}\\) | RP↔satellite RTT at epoch | µs |
+| \\(D\\) | rate of change of Common RTT | µs/s |
+| \\(V\\) | quadratic drift coefficient | µs/s² |
+| \\(\Delta t=t-t_{epoch}\\) | elapsed time relative to epoch | s |
+| \\(d_{common}(t)\\) | current one-way RP→satellite delay | µs |
 
 The units explain the equation:
 
-\[
+\\[
 (\mu s/s)(s)=\mu s,
 \qquad
 (\mu s/s^2)(s^2)=\mu s.
-\]
+\\]
 
-The division by two exists because the broadcast Common TA terms describe an RTT while \(d_{common}\) is one-way delay. The quadratic coefficient is applied exactly as signalled; an additional \(1/2\) from a textbook acceleration Taylor series must not be inserted.
+The division by two exists because the broadcast Common TA terms describe an RTT while \\(d_{common}\\) is one-way delay. The quadratic coefficient is applied exactly as signalled; an additional \\(1/2\\) from a textbook acceleration Taylor series must not be inserted.
 
 ### 6.1 Numerical epoch and drift example
 
@@ -229,30 +229,30 @@ D                          = +4 µs/s
 V                          = +0.02 µs/s²
 ```
 
-At epoch, \(\Delta t=0\):
+At epoch, \\(\Delta t=0\\):
 
-\[
+\\[
 d_{common}(t_{epoch})=\frac{2000}{2}=1000\ \mu s.
-\]
+\\]
 
 Five seconds later, the tracked frame is SFN 600/subframe 0:
 
-\[
+\\[
 \Delta t=(600-100)\times10\text{ ms}=5\text{ s}.
-\]
+\\]
 
 Then
 
-\[
+\\[
 d_{common}(t)=
 \frac{2000+4(5)+0.02(5^2)}{2}
 =\frac{2020.5}{2}
 =1010.25\ \mu s.
-\]
+\\]
 
 The current Common TA RTT is therefore 2020.5 µs.
 
-If the UE evaluates the model 98 ms before the future epoch, it uses \(\Delta t=-0.098\) s. The polynomial works on either side of its reference instant while the assistance remains valid.
+If the UE evaluates the model 98 ms before the future epoch, it uses \\(\Delta t=-0.098\\) s. The polynomial works on either side of its reference instant while the assistance remains valid.
 
 ### 6.2 RRC field encoding example
 
@@ -270,48 +270,48 @@ The numbers used above round the first decoded value to 2000 µs for readability
 
 The UE also treats the broadcast satellite state as valid at `epochTime`. In a one-dimensional teaching example, suppose the satellite-to-UE range and relative radial velocity at epoch are
 
-\[
+\\[
 R_0=599{,}584.916\text{ m},
 \qquad v_r=-1000\text{ m/s}.
-\]
+\\]
 
 The minus sign means closing range. At epoch,
 
-\[
+\\[
 d_{service}(t_0)=\frac{R_0}{c}=2\text{ ms},
-\]
+\\]
 
 so the service-link RTT is 4 ms.
 
 After five seconds, using a constant-radial-velocity approximation,
 
-\[
+\\[
 R(5)=599{,}584.916-1000(5)=594{,}584.916\text{ m},
-\]
+\\]
 
-\[
+\\[
 d_{service}(5)=\frac{594{,}584.916}{299{,}792{,}458}
 =1.983321795\text{ ms}.
-\]
+\\]
 
 The service-link RTT becomes
 
-\[
+\\[
 TA_{UE}(5)=3.966643590\text{ ms}.
-\]
+\\]
 
 Combining it with the time-updated Common TA,
 
-\[
+\\[
 T_{TA}(5)=3.966643590+2.0205
 =5.987143590\text{ ms}.
-\]
+\\]
 
 A real implementation propagates the full three-dimensional state and computes
 
-\[
+\\[
 R(t)=\|\mathbf r_s(t)-\mathbf r_u(t)\|,
-\]
+\\]
 
 rather than assuming one constant radial velocity.
 
@@ -326,19 +326,19 @@ RP → UE        = 3 ms one way
 Total NTN TA   = 6 ms
 ```
 
-Let DL frame 100 cross the RP at \(t=0\). It reaches the UE at \(t=3\) ms but still carries SFN 100.
+Let DL frame 100 cross the RP at \\(t=0\\). It reaches the UE at \\(t=3\\) ms but still carries SFN 100.
 
 The UE positions the corresponding UL frame 6 ms before the received DL-frame boundary:
 
-\[
+\\[
 t_{UE,TX}=3-6=-3\text{ ms}.
-\]
+\\]
 
 The UL then takes 3 ms to travel back:
 
-\[
+\\[
 -3+3=0\text{ ms}.
-\]
+\\]
 
 <div class="mermaid">
 sequenceDiagram
@@ -372,29 +372,29 @@ k_mac                                          = 2 ms
 
 Assume the real RP-to-UE path also contains 1.5625 µs of fixed group delay in each direction that was not included in Common TA. The actual one-way delay is
 
-\[
+\\[
 3\text{ ms}+1.5625\ \mu s=3.0015625\text{ ms}.
-\]
+\\]
 
 The required RTT advance is therefore
 
-\[
+\\[
 2(3.0015625)=6.003125\text{ ms}.
-\]
+\\]
 
 ### 9.2 Msg1 arrives slightly late
 
 Using only the initial 6 ms advance, Msg1 reaches the RP
 
-\[
+\\[
 6.003125-6.000000=3.125\ \mu s
-\]
+\\]
 
 late. Because RP-to-gNB is 1 ms one way, the gNB observes Msg1 at approximately
 
-\[
+\\[
 1.003125\text{ ms}
-\]
+\\]
 
 relative to the expected RP frame boundary.
 
@@ -410,23 +410,23 @@ RAR starts at gNB:      2.003125 ms
 
 The physical gNB-to-UE delay is
 
-\[
+\\[
 1\text{ ms gNB→RP}+1\text{ ms RP→satellite}
 +2\text{ ms satellite→UE}+1.5625\ \mu s
 =4.0015625\text{ ms}.
-\]
+\\]
 
 So the UE receives the RAR at
 
-\[
+\\[
 2.003125+4.0015625=6.0046875\text{ ms}.
-\]
+\\]
 
-For NTN, the RAR/MsgB response-window timing includes the additional \(T_{TA}+k_{mac}\) relationship. In this example,
+For NTN, the RAR/MsgB response-window timing includes the additional \\(T_{TA}+k_{mac}\\) relationship. In this example,
 
-\[
+\\[
 T_{TA}+k_{mac}=6+2=8\text{ ms},
-\]
+\\]
 
 which gives the window enough delay to cover the long path.
 
@@ -434,53 +434,53 @@ which gives the window enough delay to cover the long path.
 
 For 15 kHz SCS, one RAR TA step is
 
-\[
+\\[
 1024T_c=0.520833333\ \mu s,
-\]
+\\]
 
 where
 
-\[
+\\[
 T_c=\frac{1}{480000\times4096}=0.508626302\text{ ns}.
-\]
+\\]
 
 The required residual is exactly six steps:
 
-\[
+\\[
 6\times0.520833333=3.125\ \mu s.
-\]
+\\]
 
 The RAR can therefore carry TA command 6. The updated total advance is
 
-\[
+\\[
 6.000000+0.003125=6.003125\text{ ms}.
-\]
+\\]
 
 ### 9.5 Msg3 reaches the RP exactly
 
 Choose a future RP UL boundary at 20 ms. The corresponding DL boundary reaches the UE at
 
-\[
+\\[
 20+3.0015625=23.0015625\text{ ms}.
-\]
+\\]
 
 The UE transmits Msg3 at
 
-\[
+\\[
 23.0015625-6.003125=16.9984375\text{ ms}.
-\]
+\\]
 
 After one-way propagation,
 
-\[
+\\[
 16.9984375+3.0015625=20.0000000\text{ ms}.
-\]
+\\]
 
 Msg3 is aligned exactly at the RP and reaches the gNB at 21 ms. With another illustrative 1 ms gNB processing interval, Msg4 begins at 22 ms and reaches the UE at
 
-\[
+\\[
 22+4.0015625=26.0015625\text{ ms}.
-\]
+\\]
 
 This separates the functions cleanly:
 

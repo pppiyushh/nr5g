@@ -26,9 +26,9 @@ Earth rotates underneath the orbit. Therefore, the point directly below the sate
 
 | Inclination | Ground-region implication |
 |---:|---|
-| \(0^\circ\) | Equatorial orbit; cannot directly cover high latitudes |
-| \(53^\circ\) | Ground track reaches approximately \(53^\circ\) north and south latitude |
-| Near \(90^\circ\) | Near-polar orbit; can pass over nearly all latitudes |
+| \\(0^\circ\\) | Equatorial orbit; cannot directly cover high latitudes |
+| \\(53^\circ\\) | Ground track reaches approximately \\(53^\circ\\) north and south latitude |
+| Near \\(90^\circ\\) | Near-polar orbit; can pass over nearly all latitudes |
 
 Perturbations, Earth oblateness, atmospheric drag and station keeping slowly change a real orbit, but the planar two-body model is the correct first mental picture.
 
@@ -36,35 +36,35 @@ Perturbations, Earth oblateness, atmospheric drag and station keeping slowly cha
 
 Use:
 
-\[
+\\[
 R_E=6371\text{ km},\qquad h=600\text{ km},
-\]
+\\]
 
-\[
+\\[
 r_s=R_E+h=6971\text{ km}.
-\]
+\\]
 
 For a circular orbit with Earth's gravitational parameter
 
-\[
+\\[
 \mu=398600.4418\text{ km}^3/\text{s}^2,
-\]
+\\]
 
 the orbital speed is
 
-\[
+\\[
 v=\sqrt{\frac{\mu}{r_s}}
 =\sqrt{\frac{398600.4418}{6971}}
 =7.562\text{ km/s}.
-\]
+\\]
 
 The orbital period is
 
-\[
+\\[
 T=2\pi\sqrt{\frac{r_s^3}{\mu}}
 =5792.3\text{ s}
 =96.54\text{ minutes}.
-\]
+\\]
 
 A LEO satellite therefore moves several kilometres each second and completes roughly 15 orbits per day. The ground observer sees a short pass because Earth is large and the usable radio elevation mask is much higher than the mathematical horizon.
 
@@ -123,21 +123,21 @@ Even a quasi-Earth-fixed beam cannot remain on one area forever: the satellite e
 
 ## 5. Elevation angle and central angle are different
 
-Elevation \(e\) is measured at the UE between the satellite line of sight and the UE's local horizontal plane:
+Elevation \\(e\\) is measured at the UE between the satellite line of sight and the UE's local horizontal plane:
 
-- \(e=0^\circ\): satellite is at the geometric horizon;
-- \(e=90^\circ\): satellite is directly overhead at zenith.
+- \\(e=0^\circ\\): satellite is at the geometric horizon;
+- \\(e=90^\circ\\): satellite is directly overhead at zenith.
 
-The geocentric angle \(\psi\) is measured at Earth's centre between:
+The geocentric angle \\(\psi\\) is measured at Earth's centre between:
 
 - the radius to the UE; and
 - the radius to the satellite's sub-satellite point.
 
 They are angles at different vertices, so
 
-\[
+\\[
 \psi\ne90^\circ-e.
-\]
+\\]
 
 <svg class="geometry-diagram" viewBox="0 0 760 430" role="img" aria-labelledby="geometry-title geometry-desc">
   <title id="geometry-title">Satellite elevation and Earth central angle</title>
@@ -164,71 +164,71 @@ They are angles at different vertices, so
 
 The related **zenith angle** at the UE is
 
-\[
+\\[
 z=90^\circ-e.
-\]
+\\]
 
-Thus \(90^\circ-e\) is a UE-local angle between local vertical and line of sight. It is not the Earth-centred angle \(\psi\).
+Thus \\(90^\circ-e\\) is a UE-local angle between local vertical and line of sight. It is not the Earth-centred angle \\(\psi\\).
 
 ## 6. Slant range and elevation equations
 
 For a spherical-Earth model,
 
-\[
+\\[
 r_s=R_E+h.
-\]
+\\]
 
-Given central angle \(\psi\), the UE-to-satellite slant range is obtained by the cosine rule:
+Given central angle \\(\psi\\), the UE-to-satellite slant range is obtained by the cosine rule:
 
-\[
+\\[
 d=\sqrt{r_s^2+R_E^2-2r_sR_E\cos\psi}.
-\]
+\\]
 
 Elevation is related to the same triangle by
 
-\[
+\\[
 \tan e=\frac{r_s\cos\psi-R_E}{r_s\sin\psi}.
-\]
+\\]
 
-If the design begins with a minimum elevation \(e_{min}\), the maximum central angle is
+If the design begins with a minimum elevation \\(e_{min}\\), the maximum central angle is
 
-\[
+\\[
 \boxed{
 \psi_{max}=\cos^{-1}\!\left(\frac{R_E}{r_s}\cos e_{min}\right)-e_{min}
 }.
-\]
+\\]
 
 The surface distance from the sub-satellite point to the footprint edge is approximately
 
-\[
+\\[
 s=R_E\psi_{max},
-\]
+\\]
 
-with \(\psi\) expressed in radians.
+with \\(\psi\\) expressed in radians.
 
 ## 7. Numerical elevation table for a 600 km LEO
 
-Using \(R_E=6371\) km and \(h=600\) km:
+Using \\(R_E=6371\\) km and \\(h=600\\) km:
 
-| Minimum elevation | Maximum \(\psi\) | Surface radius | Slant range | One-way free-space delay |
+| Minimum elevation | Maximum \\(\psi\\) | Surface radius | Slant range | One-way free-space delay |
 |---:|---:|---:|---:|---:|
-| \(0^\circ\) | \(23.946^\circ\) | 2663 km | 2829 km | 9.438 ms |
-| \(5^\circ\) | \(19.432^\circ\) | 2161 km | 2328 km | 7.766 ms |
-| \(10^\circ\) | \(15.836^\circ\) | 1761 km | 1932 km | 6.443 ms |
-| \(20^\circ\) | \(10.816^\circ\) | 1203 km | 1392 km | 4.644 ms |
-| \(30^\circ\) | \(7.675^\circ\) | 853 km | 1075 km | 3.586 ms |
-| \(60^\circ\) | \(2.809^\circ\) | 312 km | 683 km | 2.279 ms |
-| \(90^\circ\) | \(0^\circ\) | 0 km | 600 km | 2.001 ms |
+| \\(0^\circ\\) | \\(23.946^\circ\\) | 2663 km | 2829 km | 9.438 ms |
+| \\(5^\circ\\) | \\(19.432^\circ\\) | 2161 km | 2328 km | 7.766 ms |
+| \\(10^\circ\\) | \\(15.836^\circ\\) | 1761 km | 1932 km | 6.443 ms |
+| \\(20^\circ\\) | \\(10.816^\circ\\) | 1203 km | 1392 km | 4.644 ms |
+| \\(30^\circ\\) | \\(7.675^\circ\\) | 853 km | 1075 km | 3.586 ms |
+| \\(60^\circ\\) | \\(2.809^\circ\\) | 312 km | 683 km | 2.279 ms |
+| \\(90^\circ\\) | \\(0^\circ\\) | 0 km | 600 km | 2.001 ms |
 
-For \(e_{min}=10^\circ\):
+For \\(e_{min}=10^\circ\\):
 
-\[
+\\[
 \psi_{max}
 =\cos^{-1}\!\left(\frac{6371}{6971}\cos10^\circ\right)-10^\circ
 =15.836^\circ.
-\]
+\\]
 
-This is the significance of \(\psi\): it converts a local elevation requirement into a geographic angular footprint on Earth.
+This is the significance of \\(\psi\\): it converts a local elevation requirement into a geographic angular footprint on Earth.
 
 ## 8. Why designers often begin near a 10° elevation mask
 
@@ -256,35 +256,35 @@ The correct value comes from link budget, terminal antenna, environment, require
 
 ## 9. Motion creates delay and Doppler
 
-For UE and satellite positions \(\mathbf r_u,\mathbf r_s\),
+For UE and satellite positions \\(\mathbf r_u,\mathbf r_s\\),
 
-\[
+\\[
 \boldsymbol\rho=\mathbf r_s-\mathbf r_u,
 \qquad
 R=\|\boldsymbol\rho\|.
-\]
+\\]
 
-With velocities \(\mathbf v_u,\mathbf v_s\), radial range rate is
+With velocities \\(\mathbf v_u,\mathbf v_s\\), radial range rate is
 
-\[
+\\[
 \dot R=(\mathbf v_s-\mathbf v_u)\cdot\frac{\boldsymbol\rho}{R}.
-\]
+\\]
 
 First-order Doppler is
 
-\[
+\\[
 f_D=-\frac{\dot R}{c}f_c.
-\]
+\\]
 
 The satellite's total orbital speed is not inserted directly into Doppler. Only the line-of-sight component matters. Near the closest point of a pass, total speed remains high while radial speed can cross through zero, causing Doppler to change sign.
 
 Delay also evolves:
 
-\[
+\\[
 \tau(t)=\frac{R(t)}{c},
 \qquad
 \dot\tau(t)=\frac{\dot R(t)}{c}.
-\]
+\\]
 
 This is why SIB19 needs an epoch and why a UE must propagate satellite position instead of treating one received coordinate as permanent.
 
