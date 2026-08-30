@@ -11,6 +11,11 @@ The site is maintained by **Piyush Kumar Singh**. It connects public specificati
 - [NR NTN — From Satellite State to Radio Link](NTN/nr-ntn.md)
 - [NR-NTN Timing Advance — From SIB19 Epoch to gNB](NTN/timing-advance-and-epoch-time.md)
 - [LEO Orbits, Satellite Beams and Elevation Angle](NTN/leo-orbits-beams-and-elevation.md)
+- [LEO Pass Simulator: From State Error to Timing and Doppler Residual](NTN/leo-pass-simulator-error-analysis.md)
+
+### Reproducible experiment
+
+- [LEO Pass Simulator](https://github.com/pppiyushh/leo-pass-simulator) — versioned Python source, configuration, full CSV results, figures, tests and limitations for a 600 km pass and controlled NTN state-error study.
 
 ### 5G NR physical layer and standards
 

@@ -40,7 +40,29 @@
             <span>Public standards</span>
             <span>Explicit assumptions</span>
             <span>Numerical checks</span>
-            <span>Open limitations</span>
+            <span>Open code and data</span>
+        </div>
+    </section>
+
+    <section id="experiment" class="section-soft">
+        <div class="topic-label">First reproducible experiment</div>
+        <h2>LEO state uncertainty → residual NTN timing and Doppler</h2>
+        <p class="section-intro">
+            A public Python model now turns the satellite-ephemeris discussion into an inspectable experiment: one declared 600 km pass, controlled error sweeps, complete CSV data, regenerated figures, 11 tests and explicit model limitations.
+        </p>
+        <div class="grid feature-grid">
+            <article class="card">
+                <div class="evidence-tag">Reproducible experiment</div>
+                <h3>Read the result and engineering interpretation</h3>
+                <p>A 10 ms epoch error produces up to 0.436 µs residual service-link RTT and 5.360 Hz residual Doppler in the declared Hyderabad pass. See why those values change with geometry and what they do—and do not—prove.</p>
+                <a href="NTN/leo-pass-simulator-error-analysis.html">Review the experiment →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Versioned code, data and tests</div>
+                <h3>Reproduce or challenge every number</h3>
+                <p>Inspect the configuration, coordinate transforms, orbit model, error injections, signed time series, summary tables, vector figures, test suite and CI workflow.</p>
+                <a href="https://github.com/pppiyushh/leo-pass-simulator" target="_blank" rel="noopener noreferrer">Open the simulator repository →</a>
+            </article>
         </div>
     </section>
 
@@ -149,12 +171,12 @@
     <section class="evidence-panel" aria-labelledby="evidence-heading">
         <div>
             <div class="topic-label">Evidence before labels</div>
-            <h2 id="evidence-heading">Explanation is not automatically original research.</h2>
+            <h2 id="evidence-heading">The site now separates explanation from executable evidence.</h2>
             <p>
-                NR5G distinguishes standards interpretation, mathematical derivation, literature synthesis and reproducible experimentation. “Original research” is reserved for a novel question or method supported by inspectable code, data, comparisons and limitations.
+                NR5G distinguishes standards interpretation, mathematical derivation, literature synthesis and reproducible experimentation. The LEO pass study publishes code, configuration, full data, plots, tests and limitations; “original research” remains reserved for a defensible novel contribution with independent baselines.
             </p>
         </div>
-        <a class="button-secondary" href="about.html#evidence">Read the evidence policy →</a>
+        <a class="button-secondary" href="NTN/leo-pass-simulator-error-analysis.html">Inspect the evidence →</a>
     </section>
 
     <div class="about" id="about">

@@ -11,6 +11,8 @@ math: true
 mermaid: true
 previous_title: SIB19, Epoch Time and Timing Advance
 previous_url: /NTN/timing-advance-and-epoch-time.html
+next_title: LEO Pass Timing and Doppler Experiment
+next_url: /NTN/leo-pass-simulator-error-analysis.html
 ---
 
 ## 1. Does a satellite always orbit around an Earth diameter?
