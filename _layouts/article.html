@@ -22,7 +22,7 @@
     {% endif %}
     <script defer src="{{ '/assets/js/article.js' | relative_url }}"></script>
 </head>
-<body>
+<body{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
 <a class="skip-link" href="#article-content">Skip to main content</a>
 <header>
     <div class="nav">
@@ -31,6 +31,8 @@
             <a href="{{ '/NTN/' | relative_url }}">NR NTN</a>
             <a href="{{ '/5G/' | relative_url }}">5G NR</a>
             <a href="{{ '/#research' | relative_url }}">Research</a>
+            <a href="{{ '/radar/' | relative_url }}">Radar</a>
+            <a href="{{ '/atlas/' | relative_url }}">Atlas</a>
             <a href="{{ '/about.html' | relative_url }}">About & Evidence</a>
             <a href="https://github.com/pppiyushh/nr5g" target="_blank" rel="noopener noreferrer">Source</a>
         </nav>
@@ -60,6 +62,14 @@
             <strong>RF Materials</strong>
             <a class="{% if page.url contains 'materials-and-propagation' %}active{% endif %}" href="{{ '/Research/rf-materials/materials-and-propagation.html' | relative_url }}">Materials & Propagation</a>
             <a class="{% if page.url contains 'protective-fabrics' %}active{% endif %}" href="{{ '/Research/rf-materials/protective-fabrics.html' | relative_url }}">RF-Shielding Fabrics</a>
+        </div>
+        <div class="sidebar-group">
+            <strong>Living Research</strong>
+            <a class="{% if page.url == '/radar/' %}active{% endif %}" href="{{ '/radar/' | relative_url }}">Weekly Radar Archive</a>
+            <a class="{% if page.url contains '/radar/2026-W35' %}active{% endif %}" href="{{ '/radar/2026-W35/' | relative_url }}">Radar 2026-W35</a>
+            <a class="{% if page.url contains '/radar/methodology' %}active{% endif %}" href="{{ '/radar/methodology/' | relative_url }}">Radar Methodology</a>
+            <a class="{% if page.url == '/atlas/' %}active{% endif %}" href="{{ '/atlas/' | relative_url }}">Wireless Company Atlas</a>
+            <a class="{% if page.url contains '/atlas/methodology' %}active{% endif %}" href="{{ '/atlas/methodology/' | relative_url }}">Atlas Methodology</a>
         </div>
     </aside>
 

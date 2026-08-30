@@ -525,6 +525,29 @@ footer {
     font-size: 0.94rem;
 }
 
+.atlas-page .article-shell {
+    max-width: 1500px;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 42px;
+}
+
+.atlas-page .article-body table,
+.radar-page .article-body table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.atlas-page .article-body th,
+.atlas-page .article-body td {
+    min-width: 165px;
+}
+
+.atlas-page .article-body th:first-child,
+.atlas-page .article-body td:first-child {
+    min-width: 145px;
+}
+
 .article-body th,
 .article-body td {
     padding: 10px 12px;
@@ -657,6 +680,11 @@ footer {
     }
 
     .article-shell {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .atlas-page .article-shell {
         grid-template-columns: 1fr;
         gap: 30px;
     }

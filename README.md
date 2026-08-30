@@ -24,6 +24,13 @@ The site is maintained by **Piyush Kumar Singh**. It connects public specificati
 - [RF Materials, Permittivity and Wireless Propagation](Research/rf-materials/materials-and-propagation.md)
 - [Can Clothing Reduce RF Exposure?](Research/rf-materials/protective-fabrics.md)
 
+### Living research and industry maps
+
+- [NR5G Weekly Radar](radar/index.md) — a source-checked archive of weekly standards, research, product, patent and commercialization signals
+- [Weekly Radar 2026-W35](radar/2026-W35/index.md) — the inaugural issue covering 24–30 August 2026
+- [Wireless Company Atlas v0.1](atlas/index.md) — 41 companies across 22 countries, mapped by products, specialization and maturity
+- [Radar methodology](radar/methodology/index.md) and [Atlas methodology](atlas/methodology/index.md)
+
 ## Evidence labels
 
 Each published page identifies what it actually demonstrates:
@@ -33,6 +40,8 @@ Each published page identifies what it actually demonstrates:
 | Standards analysis | Interprets normative or institutional public sources. |
 | Technical derivation | Develops equations and numerical examples from stated assumptions. |
 | Research synthesis | Connects peer-reviewed work, mechanisms, trade-offs and open questions. |
+| Curated technical review | Selects dated developments and grades the maturity and limitations of their evidence. |
+| Curated industry landscape | Maps companies and products using dated public company and product evidence. |
 | Reproducible experiment | Requires public code, configuration, generated data, plots, checks and limitations. |
 | Original research | Reserved for a novel question or method with comparative evaluation. |
 
@@ -44,6 +53,8 @@ Drafts are kept out of public navigation until their technical review and refere
 5G/                 5G NR physical-layer and standards articles
 NTN/                NR-NTN and satellite-radio articles
 Research/           Cross-domain wireless research syntheses
+radar/              Weekly issues, archive and selection methodology
+atlas/              Geographic company landscape and verification methodology
 6G/                 Draft research tracks not yet publicly promoted
 _layouts/           Jekyll article templates
 assets/              Shared styles and article navigation script
