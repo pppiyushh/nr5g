@@ -3,126 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NR5G | 5G NR, 6G & Wireless Systems</title>
-    <meta name="description" content="Research-oriented technical notes and engineering projects covering 5G NR, 6G, NTN, RF propagation, PHY, DSP and embedded wireless systems.">
+    <title>NR5G | 5G NR, NTN & Wireless Engineering</title>
+    <meta name="description" content="Standards-grounded technical analyses of 5G NR, NR-NTN, satellite geometry, physical-layer signal processing and emerging wireless systems.">
     <meta name="author" content="Piyush Kumar Singh">
     <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header>
     <div class="nav">
         <a class="logo" href="index.html">NR<span>5G</span></a>
-        <nav>
+        <nav aria-label="Primary navigation">
+            <a href="NTN/">NR NTN</a>
+            <a href="5G/">5G NR</a>
             <a href="#research">Research</a>
-            <a href="#foundations">Foundations</a>
-            <a href="#projects">Projects</a>
-            <a href="#about">About</a>
-            <a href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="about.html">About & Evidence</a>
+            <a href="https://github.com/pppiyushh/nr5g" target="_blank" rel="noopener noreferrer">Source</a>
         </nav>
     </div>
 </header>
 
-<main>
+<main id="main-content">
     <section class="hero">
-        <h1>Researching <span>5G, 6G & Wireless Systems</span> from physics to implementation.</h1>
+        <div class="topic-label">Piyush Kumar Singh · NR Layer-1 & NTN</div>
+        <h1>Standards-grounded analysis of <span>5G NR, NTN and wireless systems.</span></h1>
         <p>
-            NR5G is a research-oriented technical platform focused on emerging wireless architectures, RF propagation, modem systems and the engineering constraints between academic ideas and real implementations.
+            NR5G connects public specifications and research literature to mathematical derivations, numerical examples and implementation constraints. The emphasis is on work that can be inspected, challenged and reproduced without proprietary modem information.
         </p>
         <div class="buttons">
-            <a class="button-primary" href="#research">Explore Research</a>
-            <a class="button-secondary" href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">View GitHub</a>
+            <a class="button-primary" href="NTN/">Explore NR NTN</a>
+            <a class="button-secondary" href="about.html#evidence">How evidence is classified</a>
+        </div>
+        <div class="hero-proof" aria-label="Editorial principles">
+            <span>Public standards</span>
+            <span>Explicit assumptions</span>
+            <span>Numerical checks</span>
+            <span>Open limitations</span>
+        </div>
+    </section>
+
+    <section id="featured">
+        <h2>Featured NR NTN & Physical-Layer Work</h2>
+        <p class="section-intro">
+            Begin with the topics closest to modem and satellite-radio engineering. Each page identifies whether it is a standards analysis, technical derivation or research synthesis.
+        </p>
+        <div class="grid feature-grid">
+            <article class="card">
+                <div class="evidence-tag">Standards-guided numerical analysis</div>
+                <h3>SIB19, Epoch Time and Timing Advance</h3>
+                <p>Follow a transparent NTN link from radio-frame epoch and Common TA through UE-specific delay prediction, random access and uplink arrival at the synchronization reference point.</p>
+                <a href="NTN/timing-advance-and-epoch-time.html">Trace the timing numerically →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Numerical geometry analysis</div>
+                <h3>LEO Orbits, Beams and Elevation</h3>
+                <p>Connect orbital motion, elevation angle, slant range, delay, radial velocity and Doppler using explicit geometry and worked values.</p>
+                <a href="NTN/leo-orbits-beams-and-elevation.html">Build the satellite geometry →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Technical derivation</div>
+                <h3>OFDM Orthogonality and NR Numerology</h3>
+                <p>Derive the SCS–symbol-duration relationship, reconstruct the 15 kHz timing grid and test a complete hypothetical 10 kHz design.</p>
+                <a href="5G/physical-layer/ofdm-numerology-scs-symbol-duration.html">Derive the NR time-frequency grid →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Technical derivation</div>
+                <h3>MIMO and NR Channel Estimation</h3>
+                <p>Move from the channel matrix and capacity result to LS/LMMSE estimation, NR reference signals, channel aging and hardware-constrained spatial rank.</p>
+                <a href="5G/physical-layer/mimo-channel-estimation.html">Build MIMO from first principles →</a>
+            </article>
+        </div>
+    </section>
+
+    <section id="foundations" class="section-soft">
+        <h2>Engineering Foundations</h2>
+        <p class="section-intro">
+            Supporting material is added when it strengthens an implementation or research question rather than to create a broad telecom encyclopedia.
+        </p>
+        <div class="grid">
+            <article class="card">
+                <div class="evidence-tag">Standards analysis</div>
+                <h3>NR over Non-Terrestrial Networks</h3>
+                <p>Transparent payloads, ECEF state, range and range rate, GEO/LEO behavior, timing, Doppler and the assumptions NR changes for satellite access.</p>
+                <a href="NTN/nr-ntn.html">Build the NR NTN model →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Standards & certification analysis</div>
+                <h3>Who Verifies a Commercial Modem?</h3>
+                <p>Separate 3GPP conformance specifications from certification, regulation, operator acceptance and field behavior.</p>
+                <a href="5G/standards/modem-conformance.html">Follow the verification chain →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Topic collection</div>
+                <h3>5G NR Engineering</h3>
+                <p>Browse implementation-oriented physical-layer derivations and standards analyses in one place.</p>
+                <a href="5G/">Explore 5G NR →</a>
+            </article>
         </div>
     </section>
 
     <section id="research">
-        <h2>Research Frontiers</h2>
+        <h2>Research Syntheses</h2>
         <p class="section-intro">
-            The site begins with a small number of deep research tracks rather than a broad telecom encyclopedia. Each track develops from a concrete engineering problem toward mechanisms, constraints, trade-offs and open research questions.
+            These pages connect peer-reviewed or institutional sources to engineering mechanisms and open questions. They are labelled as syntheses, not original research.
         </p>
-        <div class="grid">
-            <div class="card">
-                <h3>6G Architecture</h3>
-                <p>Cell-free massive MIMO, distributed radio access, ultra-dense networks and the transition from cell-centric to user-centric architectures.</p>
-                <a href="6G/architecture/cell-free-networks.html">From Cells to Cell-Free Networks →</a>
-            </div>
-            <div class="card">
-                <h3>AI-Native Wireless</h3>
-                <p>Whether AI should evolve from an optimization tool into a first-class architectural function spanning UE, RAN, edge and core.</p>
-                <a href="6G/ai-native/ai-plane.html">Why 6G May Need an AI Plane →</a>
-            </div>
-            <div class="card">
+        <div class="grid feature-grid">
+            <article class="card">
+                <div class="evidence-tag">Peer-reviewed research synthesis</div>
                 <h3>Inverse-Designed RFICs</h3>
-                <p>How learned electromagnetic surrogates and reinforcement learning can synthesize unconventional RF, mmWave and sub-THz chip structures from specifications.</p>
-                <a href="Research/inverse-designed-rfics.html">When AI Starts Solving Maxwell →</a>
-            </div>
-            <div class="card">
-                <h3>RF Materials & Propagation</h3>
-                <p>Dielectric properties, frequency-dependent permittivity, building penetration and the possibility of engineering the radio environment itself.</p>
-                <a href="Research/rf-materials/">Explore RF Materials →</a>
-            </div>
+                <p>How learned electromagnetic surrogates and reinforcement learning are changing RF and sub-THz circuit design from parameter tuning toward specification-driven synthesis.</p>
+                <a href="Research/inverse-designed-rfics.html">See when AI starts solving Maxwell →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Engineering evidence review</div>
+                <h3>RF Materials and Propagation</h3>
+                <p>Permittivity, conductivity, loss, building penetration and conductive fabrics, grounded in propagation recommendations and measurement standards.</p>
+                <a href="Research/rf-materials/">Explore RF materials →</a>
+            </article>
         </div>
     </section>
 
-    <section id="foundations">
-        <h2>Engineering Foundations</h2>
-        <p class="section-intro">
-            Supporting material will be added when an advanced research article needs it, rather than building a large fundamentals library first.
-        </p>
-        <div class="grid">
-            <div class="card">
-                <h3>5G NR</h3>
-                <p>PHY, MAC, RRC, RACH, HARQ, channel coding and implementation-oriented NR concepts that support the research tracks.</p>
-                <a href="5G/">Explore 5G NR foundations →</a>
-            </div>
-            <div class="card">
-                <h3>DSP & Physical Layer</h3>
-                <p>OFDM, FFT, estimation, MIMO, beamforming and signal-processing concepts used by real wireless systems.</p>
-                <a href="5G/physical-layer/ofdm-numerology-scs-symbol-duration.html">Start with OFDM and NR numerology →</a>
-            </div>
-            <div class="card">
-                <h3>NTN & Satellite</h3>
-                <p>NR-NTN, satellite mobility, timing, positioning, Doppler and the assumptions that change when terrestrial NR moves to space.</p>
-                <a href="NTN/">Explore NR NTN →</a>
-            </div>
+    <section class="evidence-panel" aria-labelledby="evidence-heading">
+        <div>
+            <div class="topic-label">Evidence before labels</div>
+            <h2 id="evidence-heading">Explanation is not automatically original research.</h2>
+            <p>
+                NR5G distinguishes standards interpretation, mathematical derivation, literature synthesis and reproducible experimentation. “Original research” is reserved for a novel question or method supported by inspectable code, data, comparisons and limitations.
+            </p>
         </div>
-    </section>
-
-    <section id="projects">
-        <h2>Engineering Projects</h2>
-        <p class="section-intro">
-            Open-source implementations complement the research writing by showing how communication and low-level system concepts behave in code.
-        </p>
-        <div class="grid">
-            <div class="card">
-                <h3>Software USIM Emulator</h3>
-                <p>A C-based software USIM emulator exploring SIM/USIM architecture, authentication and modem interaction.</p>
-                <a href="https://github.com/pppiyushh/SW_USIM_emulator" target="_blank" rel="noopener noreferrer">View project →</a>
-            </div>
-            <div class="card">
-                <h3>5G NR & 6G Research</h3>
-                <p>Technical implementations, experiments and documentation related to 5G NR and emerging 6G technologies.</p>
-                <a href="https://github.com/pppiyushh/5GNR_nd_6G" target="_blank" rel="noopener noreferrer">View project →</a>
-            </div>
-            <div class="card">
-                <h3>Low-Level Firmware</h3>
-                <p>Experiments with firmware, bootloaders, memory, I/O and low-level software development.</p>
-                <a href="https://github.com/pppiyushh/low-level-firmware-experiments" target="_blank" rel="noopener noreferrer">View project →</a>
-            </div>
-        </div>
+        <a class="button-secondary" href="about.html#evidence">Read the evidence policy →</a>
     </section>
 
     <div class="about" id="about">
         <div class="about-content">
             <h2>About NR5G</h2>
-            <p>NR5G is a technical knowledge and research platform focused on modern wireless communication systems from both theoretical and implementation perspectives.</p>
-            <br>
-            <p>The goal is to bridge academic research, public standards and the engineering constraints that shape real communication systems.</p>
-            <br>
-            <p>The platform is maintained by <strong>Piyush Kumar Singh</strong>, a software engineer working on NR5G Layer-1 modem development.</p>
+            <p>NR5G is maintained by <strong>Piyush Kumar Singh</strong>, a software engineer focused on 5G NR Layer-1 modem development and NR-NTN. All published material is based on public standards, public research and independent derivations.</p>
+            <p class="about-link"><a href="about.html">About the author, scope and validation method →</a></p>
         </div>
     </div>
 </main>
 
-<footer>© 2026 NR5G.com &nbsp;·&nbsp; Research-oriented notes on 5G, 6G and wireless systems</footer>
+<footer>© 2026 NR5G.com &nbsp;·&nbsp; Independent technical work on 5G NR, NTN and wireless systems</footer>
 </body>
 </html>

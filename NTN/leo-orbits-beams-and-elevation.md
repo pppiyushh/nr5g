@@ -4,6 +4,9 @@ title: LEO Orbits, Satellite Beams and Elevation Angle
 section: NR NTN
 section_url: /NTN/
 description: A geometric and numerical explanation of LEO motion, constellation coverage, spot beams, minimum elevation, central angle, slant range, delay and Doppler.
+evidence_type: Numerical geometry analysis
+reference_basis: 3GPP Release 17, ITU and space-agency sources
+last_reviewed: 2026-08-29
 math: true
 mermaid: true
 previous_title: SIB19, Epoch Time and Timing Advance

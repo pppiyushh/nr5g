@@ -1,5 +1,6 @@
 ---
 layout: article
+published: false
 title: Why 6G May Need an AI Plane
 section: 6G
 section_url: /6G/

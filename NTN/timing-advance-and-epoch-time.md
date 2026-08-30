@@ -4,6 +4,9 @@ title: NR-NTN Timing Advance — From SIB19 Epoch to gNB
 section: NR NTN
 section_url: /NTN/
 description: A numerical explanation of transparent payloads, the uplink synchronization reference point, current SFN acquisition, future epoch time, Common TA, service-link compensation and random access through a moving satellite.
+evidence_type: Standards-guided numerical analysis
+reference_basis: 3GPP Release 17
+last_reviewed: 2026-08-29
 math: true
 mermaid: true
 previous_title: NR NTN — From Satellite State to Radio Link

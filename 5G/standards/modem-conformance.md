@@ -4,6 +4,9 @@ title: Who Verifies a Commercial 5G Modem?
 section: 5G NR
 section_url: /5G/
 description: There is no single worldwide authority that proves every modem behavior is correct. This article separates 3GPP conformance specifications, industry certification, regulatory approval, operator acceptance and field performance.
+evidence_type: Standards and certification analysis
+reference_basis: 3GPP, GCF, PTCRB and regulatory sources
+last_reviewed: 2026-08-29
 math: true
 mermaid: true
 ---

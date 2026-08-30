@@ -4,6 +4,9 @@ title: "Inverse-Designed RFICs: When AI Starts Solving Maxwell"
 section: Research
 section_url: /#research
 description: How deep-learning electromagnetic surrogates and reinforcement learning are changing RFIC design from topology selection and parameter tuning into specification-driven synthesis.
+evidence_type: Peer-reviewed research synthesis
+reference_basis: Peer-reviewed RFIC literature
+last_reviewed: 2026-08-29
 ---
 
 ## 1. The research question

@@ -1,11 +1,10 @@
 ---
 layout: article
+published: false
 title: 6G — From Cells to Cell-Free Networks
 section: 6G
 section_url: /6G/
 description: Why densification, cell-edge limitations and distributed MIMO are pushing wireless research from cell-centric toward user-centric radio access.
-next_title: Why 6G May Need an AI Plane
-next_url: /6G/ai-native/ai-plane.html
 ---
 
 ## 1. Why the Cellular Model Is Evolving

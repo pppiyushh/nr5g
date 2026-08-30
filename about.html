@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Evidence | NR5G</title>
+    <meta name="description" content="About Piyush Kumar Singh, the scope of NR5G and the evidence policy used to distinguish standards analysis, derivation, reproducible experiments and original research.">
+    <meta name="author" content="Piyush Kumar Singh">
+    <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<header>
+    <div class="nav">
+        <a class="logo" href="index.html">NR<span>5G</span></a>
+        <nav aria-label="Primary navigation">
+            <a href="NTN/">NR NTN</a>
+            <a href="5G/">5G NR</a>
+            <a href="index.html#research">Research</a>
+            <a href="about.html" aria-current="page">About & Evidence</a>
+            <a href="https://github.com/pppiyushh/nr5g" target="_blank" rel="noopener noreferrer">Source</a>
+        </nav>
+    </div>
+</header>
+
+<main id="main-content">
+    <section class="hero topic-hero">
+        <div class="topic-label">Author · Scope · Method</div>
+        <h1>About <span>NR5G</span></h1>
+        <p>
+            NR5G is an independent technical publication maintained by Piyush Kumar Singh, a software engineer focused on 5G NR Layer-1 modem development and NR-NTN.
+        </p>
+    </section>
+
+    <section class="about-grid">
+        <div>
+            <h2>Why this site exists</h2>
+            <p>Wireless specifications define behavior, research papers develop methods and real implementations must still meet deadlines, RF constraints, memory limits and imperfect channel knowledge. NR5G connects those layers through explicit reasoning rather than treating them as separate subjects.</p>
+            <p>The primary focus is NR physical-layer engineering and non-terrestrial networks. Adjacent research topics are included when they illuminate future radio architectures, propagation or hardware.</p>
+        </div>
+        <aside class="principles-card">
+            <h2>Publication principles</h2>
+            <ul>
+                <li>Public sources only</li>
+                <li>Assumptions and units stated explicitly</li>
+                <li>Standardized behavior separated from implementation choices</li>
+                <li>Limitations and uncertainty disclosed</li>
+                <li>No proprietary code, logs or measurements</li>
+            </ul>
+        </aside>
+    </section>
+
+    <section id="evidence">
+        <div class="topic-label">Evidence classification</div>
+        <h2>What each label proves—and what it does not</h2>
+        <p class="section-intro">A polished explanation may demonstrate understanding, but it is not automatically a reproducible experiment or original research. The site uses the following hierarchy.</p>
+        <div class="table-wrap">
+            <table class="evidence-table">
+                <thead>
+                    <tr>
+                        <th>Evidence class</th>
+                        <th>Required evidence</th>
+                        <th>What a reader may conclude</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Standards analysis</strong></td>
+                        <td>Named specification versions and clauses, terminology boundaries and implementation-dependent points.</td>
+                        <td>The author can interpret and connect public normative requirements.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technical derivation</strong></td>
+                        <td>Stated assumptions, equations, units, numerical examples and sanity checks.</td>
+                        <td>The author can reason quantitatively from a model.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Research synthesis</strong></td>
+                        <td>Primary literature, competing approaches, trade-offs, research status and open questions.</td>
+                        <td>The author can map and critique an active research area.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reproducible experiment</strong></td>
+                        <td>Versioned code, configuration, inputs, generated data, plots, validation checks and limitations.</td>
+                        <td>A reader can rerun the analysis and challenge the result.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Original research</strong></td>
+                        <td>A novel question or method, baselines, controlled evaluation, sensitivity analysis and a defensible contribution.</td>
+                        <td>The work contributes more than explanation or reproduction.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section-soft">
+        <div class="topic-label">Reproducibility standard</div>
+        <h2>What a future NR5G experiment must contain</h2>
+        <ol class="numbered-principles">
+            <li><strong>Question:</strong> a falsifiable engineering question, not only a topic.</li>
+            <li><strong>Model:</strong> equations, coordinate frames, assumptions, units and parameter sources.</li>
+            <li><strong>Artifact:</strong> runnable code with a pinned environment and documented command.</li>
+            <li><strong>Evidence:</strong> committed input configuration, machine-readable output data and generated plots.</li>
+            <li><strong>Validation:</strong> analytical special cases, independent reference values or a second implementation.</li>
+            <li><strong>Evaluation:</strong> baseline comparison, parameter sweep and sensitivity to error.</li>
+            <li><strong>Limits:</strong> what the experiment does not model and where its conclusion stops.</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Independence and attribution</h2>
+        <p>NR5G is not an official 3GPP publication and does not represent any employer. Articles rely on public standards, public research and independent derivations. Product-specific code, confidential logs, internal measurements and proprietary implementation details are outside the scope of the site.</p>
+        <div class="buttons compact-buttons">
+            <a class="button-primary" href="https://github.com/pppiyushh/nr5g" target="_blank" rel="noopener noreferrer">Inspect the source</a>
+            <a class="button-secondary" href="index.html#featured">Browse featured work</a>
+        </div>
+    </section>
+</main>
+
+<footer>© 2026 NR5G.com &nbsp;·&nbsp; Independent technical work on wireless systems</footer>
+</body>
+</html>

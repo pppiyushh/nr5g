@@ -8,20 +8,20 @@
     <link rel="stylesheet" href="../../assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header>
     <div class="nav">
         <a class="logo" href="../../index.html">NR<span>5G</span></a>
-        <nav>
+        <nav aria-label="Primary navigation">
+            <a href="../../NTN/">NR NTN</a>
+            <a href="../../5G/">5G NR</a>
             <a href="../../index.html#research">Research</a>
-            <a href="../../index.html#foundations">Foundations</a>
-            <a href="../../index.html#projects">Projects</a>
-            <a href="../../6G/">6G</a>
-            <a href="./">RF Materials</a>
-            <a href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="../../about.html">About & Evidence</a>
+            <a href="https://github.com/pppiyushh/nr5g" target="_blank" rel="noopener noreferrer">Source</a>
         </nav>
     </div>
 </header>
-<main>
+<main id="main-content">
     <section class="hero topic-hero">
         <div class="topic-label">Research Frontier</div>
         <h1>RF Materials <span>& Propagation</span></h1>
@@ -34,16 +34,18 @@
         <h2>Research Articles</h2>
         <p class="section-intro">From complex permittivity and boundary conditions to measured building loss and conductive clothing, these articles connect material physics to wireless-system behavior.</p>
         <div class="grid">
-            <div class="card">
+            <article class="card">
+                <div class="evidence-tag">Engineering synthesis</div>
                 <h3>Materials, Permittivity & Propagation</h3>
                 <p>How permittivity, conductivity, loss tangent, thickness and frequency determine reflection, penetration and attenuation.</p>
                 <a href="materials-and-propagation.html">Build the material model →</a>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Engineering evidence review</div>
                 <h3>Can Clothing Reduce RF Exposure?</h3>
                 <p>What conductive fabrics can shield, how garments differ from material coupons, and why MPE and SAR require system-level evaluation.</p>
                 <a href="protective-fabrics.html">Examine shielding fabrics →</a>
-            </div>
+            </article>
         </div>
     </section>
 </main>

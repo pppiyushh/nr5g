@@ -1,0 +1,11 @@
+title: NR5G
+description: Standards-grounded technical analyses of 5G NR, NR-NTN and wireless systems.
+url: https://nr5g.com
+baseurl: ""
+markdown: kramdown
+timezone: Etc/UTC
+
+exclude:
+  - AGENTS.md
+  - Gemfile
+  - Gemfile.lock

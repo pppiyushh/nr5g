@@ -4,6 +4,9 @@ title: Can Clothing Reduce RF Exposure?
 section: RF Materials
 section_url: /Research/rf-materials/
 description: An engineering review of conductive textiles, electromagnetic shielding effectiveness, garment limitations, and what MPE and SAR do—and do not—say about protective clothing.
+evidence_type: Engineering evidence review
+reference_basis: FCC, IEC/IEEE and peer-reviewed sources
+last_reviewed: 2026-08-29
 previous_title: RF Materials, Permittivity and Wireless Propagation
 previous_url: /Research/rf-materials/materials-and-propagation.html
 ---

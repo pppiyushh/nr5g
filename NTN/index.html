@@ -8,19 +8,20 @@
     <link rel="stylesheet" href="../assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header>
     <div class="nav">
         <a class="logo" href="../index.html">NR<span>5G</span></a>
-        <nav>
+        <nav aria-label="Primary navigation">
+            <a href="./" aria-current="page">NR NTN</a>
+            <a href="../5G/">5G NR</a>
             <a href="../index.html#research">Research</a>
-            <a href="../index.html#foundations">Foundations</a>
-            <a href="./">NR NTN</a>
-            <a href="../6G/">6G</a>
-            <a href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="../about.html">About & Evidence</a>
+            <a href="https://github.com/pppiyushh/nr5g" target="_blank" rel="noopener noreferrer">Source</a>
         </nav>
     </div>
 </header>
-<main>
+<main id="main-content">
     <section class="hero topic-hero">
         <div class="topic-label">Engineering Foundation</div>
         <h1>NR NTN <span>& Satellite Radio</span></h1>
@@ -33,21 +34,24 @@
         <h2>Build the NTN timing model</h2>
         <p class="section-intro">Start with the architecture and satellite state, then follow SIB19 all the way through epoch-based delay prediction, random access and uplink alignment at the synchronization reference point.</p>
         <div class="grid">
-            <div class="card">
+            <article class="card">
+                <div class="evidence-tag">Standards analysis</div>
                 <h3>NR over Non-Terrestrial Networks</h3>
                 <p>NTN versus NR NTN, transparent payload architecture, ECEF satellite tracking, UE- and satellite-centric views, GEO/LEO behavior, timing and Doppler.</p>
                 <a href="nr-ntn.html">Build the NR NTN model →</a>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Standards-guided numerical analysis</div>
                 <h3>SIB19, Epoch Time and Timing Advance</h3>
                 <p>Transparent payloads, the UL synchronization reference point, current SFN acquisition, future epochs, Common TA, service-link RTT and a complete numerical RACH trace.</p>
                 <a href="timing-advance-and-epoch-time.html">Trace the timing numerically →</a>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Numerical geometry analysis</div>
                 <h3>LEO Orbits, Beams and Elevation</h3>
                 <p>Why a LEO orbit moves across the sky, how constellations maintain coverage, how spot beams move or steer, and how elevation angle changes range and footprint.</p>
                 <a href="leo-orbits-beams-and-elevation.html">See the satellite geometry →</a>
-            </div>
+            </article>
         </div>
     </section>
 </main>

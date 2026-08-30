@@ -4,6 +4,9 @@ title: "Why 15 kHz and 14 Symbols? OFDM Orthogonality and NR Numerology"
 section: 5G NR
 section_url: /5G/
 description: Derive OFDM subcarrier orthogonality, reconstruct the exact LTE timing arithmetic behind 15 kHz and 14 symbols, test a complete hypothetical 10 kHz design, and show how NR scales SCS, cyclic prefix and slot duration.
+evidence_type: Technical derivation
+reference_basis: 3GPP LTE Release 8 and NR Release 18
+last_reviewed: 2026-08-29
 math: true
 mermaid: true
 next_title: MIMO — From the Channel Matrix to NR Channel Estimation

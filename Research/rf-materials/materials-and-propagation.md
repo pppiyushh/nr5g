@@ -4,6 +4,9 @@ title: RF Materials, Permittivity and Wireless Propagation
 section: RF Materials
 section_url: /Research/rf-materials/
 description: A physical and engineering account of how permittivity, conductivity, loss, thickness and frequency determine reflection, transmission and penetration through real materials.
+evidence_type: Engineering synthesis
+reference_basis: ITU-R propagation recommendations
+last_reviewed: 2026-08-29
 next_title: Can Clothing Reduce RF Exposure?
 next_url: /Research/rf-materials/protective-fabrics.html
 ---

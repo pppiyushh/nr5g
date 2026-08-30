@@ -8,21 +8,21 @@
     <link rel="stylesheet" href="../assets/css/site.css">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header>
     <div class="nav">
         <a class="logo" href="../index.html">NR<span>5G</span></a>
-        <nav>
-            <a href="../index.html#research">Research</a>
-            <a href="../index.html#foundations">Foundations</a>
-            <a href="./">5G NR</a>
-            <a href="../6G/">6G</a>
+        <nav aria-label="Primary navigation">
             <a href="../NTN/">NR NTN</a>
-            <a href="https://github.com/pppiyushh" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="./" aria-current="page">5G NR</a>
+            <a href="../index.html#research">Research</a>
+            <a href="../about.html">About & Evidence</a>
+            <a href="https://github.com/pppiyushh/nr5g" target="_blank" rel="noopener noreferrer">Source</a>
         </nav>
     </div>
 </header>
 
-<main>
+<main id="main-content">
     <section class="hero topic-hero">
         <div class="topic-label">Engineering Foundation</div>
         <h1>5G NR <span>Engineering</span></h1>
@@ -35,21 +35,24 @@
         <h2>From radio algorithms to commercial devices</h2>
         <p class="section-intro">These foundations connect signal processing and protocol requirements to what real modem implementations, test laboratories and networks actually verify.</p>
         <div class="grid">
-            <div class="card">
+            <article class="card">
+                <div class="evidence-tag">Technical derivation</div>
                 <h3>OFDM Orthogonality and NR Numerology</h3>
                 <p>Why orthogonality gives T<sub>u</sub> = 1/Δf, why LTE selected 15 kHz, how normal CP produces 14 symbols, and what a complete 10 kHz alternative would change.</p>
                 <a href="physical-layer/ofdm-numerology-scs-symbol-duration.html">Derive the NR time-frequency grid →</a>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Technical derivation</div>
                 <h3>MIMO and NR Channel Estimation</h3>
                 <p>The MIMO capacity proof, singular spatial modes, DM-RS and CSI-RS inside NR slots, LS/LMMSE estimation, channel aging and hardware-constrained arrays.</p>
                 <a href="physical-layer/mimo-channel-estimation.html">Build MIMO from first principles →</a>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Standards & certification analysis</div>
                 <h3>Who Verifies a Commercial Modem?</h3>
                 <p>Why 3GPP writes testable requirements but does not certify products, what regulatory, GCF, PTCRB and operator testing cover, and how a non-conforming modem can still reach users.</p>
                 <a href="standards/modem-conformance.html">Follow the verification chain →</a>
-            </div>
+            </article>
         </div>
     </section>
 </main>

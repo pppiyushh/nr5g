@@ -4,6 +4,9 @@ title: "MIMO: From the Channel Matrix to NR Channel Estimation"
 section: 5G NR
 section_url: /5G/
 description: Derive MIMO capacity, follow NR reference signals into LS/LMMSE channel estimation, and see how propagation and radio hardware reduce usable spatial rank.
+evidence_type: Technical derivation
+reference_basis: 3GPP NR Release 18 and peer-reviewed literature
+last_reviewed: 2026-08-29
 math: true
 previous_title: Why 15 kHz and 14 Symbols? OFDM Orthogonality and NR Numerology
 previous_url: /5G/physical-layer/ofdm-numerology-scs-symbol-duration.html

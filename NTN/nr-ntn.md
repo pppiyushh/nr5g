@@ -4,6 +4,9 @@ title: NR NTN — From Satellite State to Radio Link
 section: NR NTN
 section_url: /NTN/
 description: How 5G NR operates through satellites, how a UE tracks satellite position and velocity, and why GEO and LEO require different timing, Doppler and mobility strategies.
+evidence_type: Standards-guided engineering analysis
+reference_basis: 3GPP Release 17 and ITU sources
+last_reviewed: 2026-08-29
 math: true
 next_title: SIB19, Epoch Time and Timing Advance
 next_url: /NTN/timing-advance-and-epoch-time.html
