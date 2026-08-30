@@ -1,0 +1,6 @@
+# Local repository instructions
+AGENTS.md
+
+# Local analytics credentials and generated reports
+.env
+analytics-report.*

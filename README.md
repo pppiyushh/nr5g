@@ -76,6 +76,31 @@ bundle exec jekyll serve
 
 Then open `http://127.0.0.1:4000`.
 
+## Visitor analytics
+
+The site supports [Cloudflare Web Analytics](https://developers.cloudflare.com/web-analytics/about/), a cookie-free analytics beacon that does not require moving the domain to Cloudflare.
+
+### Enable collection
+
+1. In Cloudflare, open **Web Analytics** and add `nr5g.com`.
+2. Copy the public beacon token from Cloudflare's JavaScript snippet.
+3. Set `cloudflare_web_analytics_token` in `_config.yml` and deploy the site.
+
+Leaving the value blank disables collection. The beacon token is intentionally public in the generated HTML; it is not an API credential. Analytics begins only after the enabled site is deployed and cannot recover earlier visits.
+
+### Print a report
+
+The dependency-free Node.js reporter summarizes page views, visits, daily activity, top pages, referrers, countries and device types:
+
+```bash
+CF_ACCOUNT_ID="your-account-id" \
+CF_SITE_TAG="your-web-analytics-site-tag" \
+CF_API_TOKEN="your-api-token" \
+node scripts/cloudflare-analytics.mjs --days 30
+```
+
+Create the API token with **Account Analytics: Read** permission. Keep it in your shell, password manager or GitHub secret; never put it in `_config.yml` or commit it. Add `--json` for machine-readable output. The report uses Cloudflare's account-scoped `rumPageloadEventsAdaptiveGroups` dataset and treats adaptively sampled values as estimates.
+
 ## Editorial rules
 
 - Prefer 3GPP, ITU, IEEE, peer-reviewed papers and official technical reports.

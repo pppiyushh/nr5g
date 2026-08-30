@@ -1,0 +1,4 @@
+{% assign analytics_token = site.cloudflare_web_analytics_token | default: "" | strip %}
+{% if analytics_token != "" %}
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"{{ analytics_token | escape }}"}'></script>
+{% endif %}

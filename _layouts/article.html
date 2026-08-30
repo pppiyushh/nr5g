@@ -21,6 +21,7 @@
     </script>
     {% endif %}
     <script defer src="{{ '/assets/js/article.js' | relative_url }}"></script>
+    {% include analytics.html %}
 </head>
 <body{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
 <a class="skip-link" href="#article-content">Skip to main content</a>

@@ -5,7 +5,11 @@ baseurl: ""
 markdown: kramdown
 timezone: Etc/UTC
 
+# Public Cloudflare Web Analytics beacon token. Leave blank to disable tracking.
+cloudflare_web_analytics_token: ""
+
 exclude:
   - AGENTS.md
   - Gemfile
   - Gemfile.lock
+  - scripts
