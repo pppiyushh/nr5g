@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5G NR Engineering | NR5G</title>
-    <meta name="description" content="Implementation-oriented foundations for 5G NR physical-layer engineering, protocol conformance, modem certification and commercial network behavior.">
+    <meta name="description" content="Implementation-oriented foundations for 5G NR physical-layer engineering, protocol-stack behavior, HARQ, protocol conformance, modem certification and commercial network behavior.">
     <link rel="stylesheet" href="../assets/css/site.css">
     {% include analytics.html %}
 </head>
@@ -32,12 +32,62 @@
         <div class="topic-label">Engineering Foundation</div>
         <h1>5G NR <span>Engineering</span></h1>
         <p>
-            From signal models and reference-signal resource elements to protocol conformance, certification and the RF, compute and channel conditions that determine what a real NR modem can achieve.
+            From signal models and reference-signal resource elements to packet flow, QoS, HARQ, protocol conformance and the RF, compute and channel conditions that determine what a real NR modem can achieve.
         </p>
     </section>
 
     <section>
-        <h2>From radio algorithms to commercial devices</h2>
+        <h2>Protocol stack: from application packet to air interface</h2>
+        <p class="section-intro">Follow the same packet across QoS Flow, SDAP, PDCP, RLC, MAC and PHY, then isolate the architectural choices that make the NR user plane scalable.</p>
+        <div class="grid">
+            <article class="card">
+                <div class="evidence-tag">Protocol-stack technical analysis</div>
+                <h3>From a Video Call to the Antenna</h3>
+                <p>Trace simultaneous video-call and browser packets through QFI, SDAP, PDCP, RLC, MAC multiplexing, the transport block, LDPC and the air interface, then reverse the path at the gNB.</p>
+                <a href="protocol-stack/nr-user-plane-packet-walk.html">Walk one packet through NR →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Protocol architecture analysis</div>
+                <h3>Why QFI and DRB Are Separate</h3>
+                <p>Separate end-to-end QoS intent from radio implementation, see why multiple QFIs can share one DRB, and understand exactly what SDAP contributes.</p>
+                <a href="protocol-stack/qfi-vs-drb-sdap.html">Separate QoS from bearer state →</a>
+            </article>
+        </div>
+    </section>
+
+    <section>
+        <h2>HARQ: from scheduler state to LDPC soft combining</h2>
+        <p class="section-intro">A four-part implementation-oriented series connecting MAC HARQ processes, DCI control, LDPC parity, soft buffers and long-delay NTN operation.</p>
+        <div class="grid">
+            <article class="card">
+                <div class="evidence-tag">PHY/MAC implementation analysis</div>
+                <h3>HARQ Processes and Soft Buffers</h3>
+                <p>Why a HARQ process is not a CPU thread, what TX and RX buffers actually hold, how failed decoding preserves soft information, and how LLR combining works.</p>
+                <a href="harq/harq-process-soft-buffer-llr-combining.html">Open the HARQ state machine →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">MAC/PHY control analysis</div>
+                <h3>HARQ PID, NDI, RV and DCI</h3>
+                <p>How dynamically scheduled transmissions identify a HARQ process, how NDI distinguishes new data from retransmission, and why RV is not a transport-block identifier.</p>
+                <a href="harq/harq-pid-ndi-rv-dci.html">Decode the control fields →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">PHY coding derivation</div>
+                <h3>LDPC Parity, Rate Matching and RV</h3>
+                <p>Distinguish CRC bits from LDPC parity, follow the circular-buffer rate-matching process, and see why incremental redundancy is stronger than simply repeating a packet.</p>
+                <a href="harq/ldpc-parity-rate-matching-rv.html">Derive incremental redundancy →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Standards & scheduler analysis</div>
+                <h3>How Many HARQ Processes Does NR Use?</h3>
+                <p>Separate UE capability from RRC configuration and per-transmission PID selection, then connect HARQ pipeline depth and soft-buffer cost to NTN delay.</p>
+                <a href="harq/harq-process-count-capability-configuration-ntn.html">Size the HARQ pipeline →</a>
+            </article>
+        </div>
+    </section>
+
+    <section>
+        <h2>Physical-layer foundations and commercial behavior</h2>
         <p class="section-intro">These foundations connect signal processing and protocol requirements to what real modem implementations, test laboratories and networks actually verify.</p>
         <div class="grid">
             <article class="card">
@@ -62,6 +112,6 @@
     </section>
 </main>
 
-<footer>© 2026 NR5G.com &nbsp;·&nbsp; 5G NR physical-layer engineering</footer>
+<footer>© 2026 NR5G.com &nbsp;·&nbsp; 5G NR protocol, scheduler and physical-layer engineering</footer>
 </body>
 </html>
