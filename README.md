@@ -1,5 +1,7 @@
 # NR5G
 
+Research notes and technical perspectives on 5G and beyond, published at [nr5g.com](https://nr5g.com).
+
 NR5G is an independent, standards-grounded technical publication focused on 5G NR Layer 1, non-terrestrial networks, satellite-radio geometry and emerging wireless systems.
 
 The site is maintained by **Piyush Kumar Singh**. It connects public specifications and research literature to mathematical derivations, numerical examples and implementation constraints without publishing proprietary modem information.
