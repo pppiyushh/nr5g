@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5G NR Engineering | NR5G</title>
-    <meta name="description" content="Implementation-oriented foundations for 5G NR physical-layer engineering, protocol-stack behavior, HARQ, protocol conformance, modem certification and commercial network behavior.">
+    <meta name="description" content="Implementation-oriented foundations for 5G NR physical-layer engineering, protocol-stack behavior, HARQ, random access, protocol conformance, modem certification and commercial network behavior.">
     <link rel="stylesheet" href="../assets/css/site.css">
     {% include analytics.html %}
 </head>
@@ -38,7 +38,7 @@
 
     <section>
         <h2>Protocol stack and initial access</h2>
-        <p class="section-intro">Follow both user-plane packet flow and the control-plane procedures that let an idle UE enter the network, including the identity chain used to resolve same-preamble RACH collisions.</p>
+        <p class="section-intro">Follow both user-plane packet flow and the complete control-plane bootstrap from SSB and MIB through SIB1, PDCCH monitoring, PRACH, RAR, Msg3 and contention resolution.</p>
         <div class="grid">
             <article class="card">
                 <div class="evidence-tag">Protocol-stack technical analysis</div>
@@ -54,9 +54,9 @@
             </article>
             <article class="card">
                 <div class="evidence-tag">Standards-guided protocol analysis</div>
-                <h3>RACH Contention Resolution: Msg3 to Msg4</h3>
-                <p>See why RA-RNTI, RAPID and Temporary C-RNTI are not enough after a same-preamble collision, where the 48-bit contention identity comes from, and how Msg4 proves which Msg3 the gNB decoded.</p>
-                <a href="protocol-stack/nr-rach-msg3-msg4-contention-resolution.html">Trace the contention identity →</a>
+                <h3>5G NR Random Access in Detail</h3>
+                <p>Trace initial access end to end: SSB and MIB bootstrap, CORESET#0/SearchSpace#0, SIB1, PRACH resource selection, RA-RNTI, RAR PDCCH monitoring, Timing Advance, Msg3 scheduling, TC-RNTI, Msg4 contention resolution, collisions, timers and retries.</p>
+                <a href="protocol-stack/nr-rach-msg3-msg4-contention-resolution.html">Trace the complete RACH procedure →</a>
             </article>
         </div>
     </section>
