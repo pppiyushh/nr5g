@@ -531,6 +531,8 @@ footer {
     gap: 42px;
 }
 
+.ntn-rach-page .article-body table,
+.ntn-epoch-page .article-body table,
 .atlas-page .article-body table,
 .radar-page .article-body table {
     display: block;

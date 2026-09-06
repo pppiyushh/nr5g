@@ -13,6 +13,8 @@ previous_title: Why QFI and DRB Are Separate
 previous_url: /5G/protocol-stack/qfi-vs-drb-sdap.html
 ---
 
+**Satellite companion:** [NR NTN Random Access: SSB acquisition, SIB19, timing/Doppler pre-compensation and Msg1–Msg4](/NTN/nr-ntn-random-access.html). For the SFN-to-local-clock mapping, see [the expanded epoch explanation](/NTN/timing-advance-and-epoch-time.html#epoch-clock-mapping).
+
 ## 1. Start from zero: what does a newly powered UE actually do?
 
 A newly powered UE does **not** know the physical cell ID, system-frame number, SIB1 location, PRACH occasions, Msg1 preambles, RA-RNTI or a serving-cell C-RNTI.

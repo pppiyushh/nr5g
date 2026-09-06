@@ -6,8 +6,9 @@ section_url: /NTN/
 description: A numerical explanation of transparent payloads, the uplink synchronization reference point, current SFN acquisition, future epoch time, Common TA, service-link compensation and random access through a moving satellite.
 evidence_type: Standards-guided numerical analysis
 reference_basis: 3GPP Release 17
-last_reviewed: 2026-08-29
+last_reviewed: 2026-09-06
 math: true
+body_class: ntn-epoch-page
 mermaid: true
 previous_title: NR NTN — From Satellite State to Radio Link
 previous_url: /NTN/nr-ntn.html
@@ -139,50 +140,111 @@ Every subframe is 1 ms and every frame is 10 ms. SFN increments modulo 1024. The
 
 By the time it receives SIB19 on PDSCH, the UE already knows the SFN and subframe in which that SIB19 instance was received.
 
-## 5. Epoch time is a reference frame boundary, not UTC
+<h2 id="epoch-clock-mapping">5. How does an SFN epoch become seconds before or after now?</h2>
 
-SIB19 can contain:
+The UE already has a running radio clock from SSB/PBCH acquisition. `epochTime` names a boundary on that clock. It contains `sfn-r17` (0–1023) and `subFrameNR-r17` (0–9), identifying the **start of a downlink subframe at the uplink synchronization reference point (RP)**. It is not UTC or a count of seconds since a global epoch.
 
-```text
-epochTime:
-    sfn = 100
-    subFrameNR = 0
-```
+The normative anchor is the `epochTime` description under **NTN-Config in TS 38.331 §6.3.2**; the precise [Release 17 edition is linked here](https://www.etsi.org/deliver/etsi_ts/138300_138399/138331/17.10.00_60/ts_138331v171000p.pdf). The clock examples below are independent engineering explanations of that reference-point definition.
 
-This means:
+### 5.1 First associate received radio time with a local clock
 
-> The satellite ephemeris and Common TA coefficients are referenced to the start of DL subframe SFN 100/subframe 0 at the UL synchronization RP.
+Synchronization supplies timing boundaries, PBCH provides the SFN context, and the modem tracks the frame/subframe sequence with its local clock and ongoing synchronization. An illustrative association is:
 
-It is not GPS time, UTC or a timestamp in seconds since an epoch. It is a label for one boundary in the NR radio-frame sequence.
+| Received boundary | Local hardware timestamp |
+|---|---:|
+| SFN 100 / subframe 0 | 50.000 s |
+| SFN 100 / subframe 1 | 50.001 s |
+| SFN 100 / subframe 7 | 50.007 s |
+| SFN 101 / subframe 0 | 50.010 s |
 
-### 5.1 The epoch can be in the future
+The clock origin is arbitrary; these could be seconds since a modem counter started. UTC is unnecessary just to calculate a difference between two consistently referenced instants.
 
-Suppose SIB19 is transmitted in SFN 90/subframe 2 and identifies SFN 100/subframe 0 as its epoch. The epoch is
+Suppose the current received timing is SFN 100/subframe 7, and SIB19 identifies epoch SFN 102/subframe 3. Ignoring wraparound for now:
 
 \\[
-(100-90)\times10\text{ ms}+(0-2)\times1\text{ ms}=98\text{ ms}
+\delta_{received}=(102-100)\times10+(3-7)=16\text{ ms}.
 \\]
 
-in the future.
+The corresponding epoch-labelled boundary will be received at approximately 50.023 s. If the current instant is partway through a subframe, include that measured fractional-subframe time too; the epoch itself identifies the start of its subframe.
 
-<div class="mermaid">
-timeline
-    title One SIB19 assistance set
-    SFN 90 / sf2 : UE receives SIB19
-    Next 98 ms : UE tracks radio time
-    SFN 100 / sf0 : Epoch values are exact
-    Following validity window : UE evaluates the time-dependent model
-</div>
+### 5.2 The received boundary and the epoch at the RP are different events
 
-The network does not need to know which UE will read the message. Common TA is cell-wide RP-to-satellite information. The network knows the satellite trajectory, RP/gateway configuration and the scheduled SIB19 occasion, so it predicts the path at a selected current or upcoming epoch.
+Assume a constant one-way RP-to-UE propagation delay of 6 ms. This is a teaching approximation; actual geometry changes with time.
 
-A UE that powers on later receives a later, currently valid SIB19 instance. Epoch, TA and ephemeris assistance can be refreshed without an ordinary system-information change notification/value-tag change. A UE should reacquire SIB19 before `ntn-UlSyncValidityDuration` expires.
+If the epoch-labelled boundary is received at local timestamp 50.023 s, the same boundary occurs at the RP approximately at:
 
-### 5.2 Why propagation does not change the SFN value
+\\[
+t_{epoch,RP}\approx50.023-0.006=50.017\text{ s}.
+\\]
 
-The waveform carrying SFN 100 reaches the UE late, but its label remains SFN 100. Propagation does not change the MIB bits to SFN 99 or 101.
+At local time 50.007 s, the physical epoch is therefore 10 ms ahead at the RP, although its corresponding received boundary is 16 ms ahead.
 
-The UE uses that received DL frame as its local downlink timing reference and advances its uplink relative to it. Changes in propagation delay are followed through ephemeris and Common TA drift; the UE does not numerically edit the decoded SFN.
+| Question | Answer in this example |
+|---|---:|
+| When will the UE receive the epoch-labelled boundary? | 16 ms from now |
+| When does that epoch occur at the RP? | Approximately 10 ms from now |
+
+Expressing both events in the same local-clock coordinate gives:
+
+\\[
+t_{now}-t_{epoch,RP}\approx t_{now}-t_{epoch,received}+\tau_{RP\rightarrow UE}.
+\\]
+
+This is the physical elapsed-time interpretation for evaluating state at the current instant in this simplified model. **Subtracting SFN labels alone gives a difference on the received downlink timeline, not automatically the physical age of the satellite state.** Propagation preserves the frame label while delaying its observation.
+
+The one-way delay estimate uses the service-link geometry and common-delay assistance. In a pure-delay reciprocal example it is half the autonomous NTN round-trip contribution. Do not blindly divide total commanded TA plus K_mac by two: fixed/calibrated offsets and the RP-to-gNB timing relationship must be distinguished. A real implementation uses a consistent event-time model for changing geometry and for the transmission/reception instant it needs to predict.
+
+### 5.3 An epoch can already be in the past
+
+Keep the current received timing at SFN 100/subframe 7, but let the epoch be SFN 100/subframe 2. Its corresponding received boundary was 5 ms ago. With the same illustrative 6 ms one-way delay, the epoch at the RP was approximately 11 ms ago:
+
+\\[
+\Delta t\approx(7-2)\text{ ms}+6\text{ ms}=0.011\text{ s}.
+\\]
+
+A model evaluated at the current physical instant uses that elapsed time in this example. Its sign means that the state is propagated forward from the epoch. For an epoch still physically ahead, the elapsed time is negative; mathematical extrapolation does not by itself establish that a particular assistance set is applicable before its configured epoch/validity interval.
+
+### 5.4 How the UE resolves SFN wraparound
+
+SFN repeats every 1024 frames, or 10.24 seconds. The number alone cannot distinguish successive occurrences.
+
+For serving-cell assistance, TS 38.331 identifies the current occurrence when the signalled SFN is current, or the next upcoming occurrence of the indicated SFN after the reception frame. This does not mean the field must always be the immediately following frame number. Neighbour and target-cell occurrence rules differ and must not be replaced with this serving-cell rule.
+
+For current received timing SFN 1022/subframe 8 and serving epoch SFN 1/subframe 3, the forward difference across wrap is:
+
+\\[
+\delta_{received}=\left[(10\times1+3)-(10\times1022+8)\right]\bmod10240=25\text{ ms}.
+\\]
+
+| Segment | Duration |
+|---|---:|
+| SFN 1022/subframe 8 to SFN 1023/subframe 0 | 2 ms |
+| SFN 1023 | 10 ms |
+| SFN 0 | 10 ms |
+| SFN 1/subframe 0 to subframe 3 | 3 ms |
+| Total | 25 ms |
+
+Do not apply a positive modulo blindly to every subframe difference: an epoch in the current frame can be earlier than the current subframe, as in section 5.3.
+
+After selecting the correct occurrence, an implementation can store an unwrapped local epoch timestamp and count elapsed time across subsequent SFN wraps. It should not reinterpret stored assistance as newly future every 10.24 seconds. Counter tracking does not extend assistance validity.
+
+### 5.5 A future-epoch example using the earlier article's values
+
+Suppose SIB19 is received in SFN 90/subframe 2 and identifies SFN 100/subframe 0. Its corresponding received boundary is:
+
+\\[
+(100-90)\times10+(0-2)=98\text{ ms}
+\\]
+
+ahead on the received radio timeline. With a constant 3 ms RP-to-UE delay, its physical epoch at the RP is approximately 95 ms ahead. The network need not know which UE will decode SIB19: it publishes a common model at a named RP boundary, and each UE relates that boundary to its own received timing and path.
+
+### 5.6 Omitted epochs, assistance refresh and vendor responsibility
+
+For serving-cell broadcast assistance, if the explicit epoch is absent, TS 38.331 uses the end of the SI window in which SIB19 is scheduled. An explicit epoch is mandatory for dedicated NTN configuration. The validity duration is measured from epoch; obtaining or reusing the same SFN label later does not renew it.
+
+The SFN/subframe meaning, occurrence rule, reference point and validity behavior are standardized. Internal clock-counter representation, timestamp storage and numerical implementation are vendor choices. Ephemeris, epoch and common-TA updates have specific SI change-notification exceptions, so ordinary value-tag changes alone are not a sufficient freshness mechanism.
+
+For the surrounding SSB → SIB1 → SIB19 → Msg1–Msg4 sequence, see [NR NTN Random Access](/NTN/nr-ntn-random-access.html).
 
 ## 6. Understanding the Common TA polynomial
 
@@ -238,7 +300,7 @@ At epoch, \\(\Delta t=0\\):
 d_{common}(t_{epoch})=\frac{2000}{2}=1000\ \mu s.
 \\]
 
-Five seconds later, the tracked frame is SFN 600/subframe 0:
+Five seconds later **on the RP-referenced timeline**, the frame is SFN 600/subframe 0. The following arithmetic assumes that the event time has already been mapped to that reference; it is not a claim that a UE receiving the same label observes the RP simultaneously:
 
 \\[
 \Delta t=(600-100)\times10\text{ ms}=5\text{ s}.
@@ -255,7 +317,7 @@ d_{common}(t)=
 
 The current Common TA RTT is therefore 2020.5 µs.
 
-If the UE evaluates the model 98 ms before the future epoch, it uses \\(\Delta t=-0.098\\) s. The polynomial works on either side of its reference instant while the assistance remains valid.
+A negative elapsed time can be inserted mathematically into the polynomial, but this alone does not establish pre-epoch applicability. Use a consistent RP-referenced event time and applicable assistance; section 5 distinguishes received-label differences from physical epoch differences.
 
 ### 6.2 RRC field encoding example
 

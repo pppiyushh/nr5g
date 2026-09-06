@@ -10,6 +10,8 @@ The site is maintained by **Piyush Kumar Singh**. It connects public specificati
 
 ### NR NTN
 
+- [NR NTN Random Access: From Doppler-Shifted SSB to SIB19 and Msg1–Msg4](NTN/nr-ntn-random-access.md)
+
 - [NR NTN — From Satellite State to Radio Link](NTN/nr-ntn.md)
 - [NR-NTN Timing Advance — From SIB19 Epoch to gNB](NTN/timing-advance-and-epoch-time.md)
 - [LEO Orbits, Satellite Beams and Elevation Angle](NTN/leo-orbits-beams-and-elevation.md)
