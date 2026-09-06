@@ -32,13 +32,13 @@
         <div class="topic-label">Engineering Foundation</div>
         <h1>5G NR <span>Engineering</span></h1>
         <p>
-            From signal models and reference-signal resource elements to packet flow, QoS, HARQ, protocol conformance and the RF, compute and channel conditions that determine what a real NR modem can achieve.
+            From signal models and reference-signal resource elements to packet flow, QoS, HARQ, random access, protocol conformance and the RF, compute and channel conditions that determine what a real NR modem can achieve.
         </p>
     </section>
 
     <section>
-        <h2>Protocol stack: from application packet to air interface</h2>
-        <p class="section-intro">Follow the same packet across QoS Flow, SDAP, PDCP, RLC, MAC and PHY, then isolate the architectural choices that make the NR user plane scalable.</p>
+        <h2>Protocol stack and initial access</h2>
+        <p class="section-intro">Follow both user-plane packet flow and the control-plane procedures that let an idle UE enter the network, including the identity chain used to resolve same-preamble RACH collisions.</p>
         <div class="grid">
             <article class="card">
                 <div class="evidence-tag">Protocol-stack technical analysis</div>
@@ -51,6 +51,12 @@
                 <h3>Why QFI and DRB Are Separate</h3>
                 <p>Separate end-to-end QoS intent from radio implementation, see why multiple QFIs can share one DRB, and understand exactly what SDAP contributes.</p>
                 <a href="protocol-stack/qfi-vs-drb-sdap.html">Separate QoS from bearer state →</a>
+            </article>
+            <article class="card">
+                <div class="evidence-tag">Standards-guided protocol analysis</div>
+                <h3>RACH Contention Resolution: Msg3 to Msg4</h3>
+                <p>See why RA-RNTI, RAPID and Temporary C-RNTI are not enough after a same-preamble collision, where the 48-bit contention identity comes from, and how Msg4 proves which Msg3 the gNB decoded.</p>
+                <a href="protocol-stack/nr-rach-msg3-msg4-contention-resolution.html">Trace the contention identity →</a>
             </article>
         </div>
     </section>
