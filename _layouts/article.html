@@ -15,10 +15,54 @@
                 inlineMath: [['\\(', '\\)']],
                 displayMath: [['\\[', '\\]'], ['$$', '$$']],
                 processEscapes: true
+            },
+            chtml: {
+                scale: 1.06
             }
         };
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        .article-body mjx-container[display="true"],
+        .ssb-component-guide mjx-container[display="true"] {
+            margin: 1.35rem 0 !important;
+            padding: 0.7rem 0.9rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            text-align: center !important;
+        }
+
+        .article-body mjx-container,
+        .ssb-component-guide mjx-container {
+            font-size: 1.04em;
+        }
+
+        .ssb-component-guide {
+            margin: 2rem 0 2.5rem;
+            padding: 1.25rem 1.4rem;
+            border: 1px solid #e1e5ea;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .ssb-component-guide h2 {
+            margin-top: 0;
+        }
+
+        .ssb-component-guide table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .ssb-component-guide th,
+        .ssb-component-guide td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #dfe4ea;
+            text-align: left;
+            vertical-align: top;
+        }
+    </style>
     {% endif %}
     {% if page.mermaid %}
     <script type="module">
@@ -113,6 +157,45 @@
             This page is classified as {{ page.evidence_type | default: "technical analysis" | downcase }}. It uses public sources and independent reasoning; the label does not imply a proprietary implementation or an original research contribution.
             <a href="{{ '/about.html#evidence' | relative_url }}">See the evidence policy.</a>
         </div>
+
+        {% if page.url contains 'nr-rach-msg3-msg4-contention-resolution' %}
+        <section class="ssb-component-guide" aria-labelledby="ssb-component-heading">
+            <h2 id="ssb-component-heading">What do PSS, SSS, PBCH and PBCH DM-RS actually contain?</h2>
+            <p>
+                The four SSB components do not all carry "payload bits" in the same sense. PSS and SSS convey identity through <strong>which standardized sequence is transmitted</strong>; PBCH carries broadcast information; PBCH DM-RS is a deterministic reference signal used to estimate the channel and test the correct PBCH hypothesis.
+            </p>
+            <table>
+                <thead>
+                    <tr><th>Component</th><th>What it contains / conveys</th><th>What the UE gets from it</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PSS</strong></td>
+                        <td>One of three standardized 127-element synchronization sequences, selected by \(N_{ID}^{(2)}\in\{0,1,2\}\). It does not carry a MIB-like bit field.</td>
+                        <td>Detects the cell's \(N_{ID}^{(2)}\), provides a strong timing anchor, and supports coarse frequency/timing synchronization.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SSS</strong></td>
+                        <td>A standardized 127-element sequence whose identity depends on \(N_{ID}^{(1)}\in\{0,\ldots,335\}\) together with the already detected \(N_{ID}^{(2)}\). Again, the information is encoded in the sequence choice rather than an explicit payload field.</td>
+                        <td>Recovers \(N_{ID}^{(1)}\). Together with PSS, the UE obtains \(N_{ID}^{cell}=3N_{ID}^{(1)}+N_{ID}^{(2)}\), i.e. the PCI.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PBCH</strong></td>
+                        <td>The Broadcast Channel transport block carrying the MIB from higher layers, plus additional PHY-generated timing-related PBCH payload bits. Those additional bits include the remaining low-order SFN information, the half-frame indication, and context-dependent SS/PBCH-block / \(k_{SSB}\) information or reserved bits. The resulting PBCH payload is CRC-protected, Polar-coded, rate-matched, scrambled and QPSK-modulated.</td>
+                        <td>The MIB and the bootstrap timing/context needed to derive the initial control-channel configuration and proceed toward SIB1.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PBCH DM-RS</strong></td>
+                        <td>No user or MIB payload. It is a known QPSK reference sequence whose initialization depends on the PCI and the relevant SS/PBCH-block index/half-frame hypothesis.</td>
+                        <td>Channel estimation for PBCH and discrimination of the appropriate PBCH/SSB hypothesis before PBCH decoding.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                A useful distinction is therefore: <strong>PSS/SSS identify by sequence selection; PBCH carries broadcast bits; PBCH DM-RS carries no payload and exists so those PBCH bits can be demodulated reliably.</strong>
+            </p>
+        </section>
+        {% endif %}
 
         <div class="article-body">
             {{ content }}
