@@ -3,9 +3,9 @@ layout: article
 title: "5G NR Random Access in Detail: From SSB and SIB1 to Msg1, RAR, Msg3 and Msg4"
 section: 5G NR
 section_url: /5G/
-description: A complete standards-guided walk through contention-based 4-step NR random access: cell acquisition, MIB and SIB1 bootstrap, CORESET and SearchSpace, PRACH configuration, Msg1, RA-RNTI, RAR monitoring, Timing Advance, Msg3 UL grant, Temporary C-RNTI, contention resolution, collisions, timers and retries.
+description: A complete standards-guided walk through contention-based 4-step NR random access, beginning with synchronization-raster scanning, PSS/SSS correlation and the exact 4-symbol SS/PBCH block resource map, then MIB, SIB1, PRACH, RAR, Msg3 and Msg4.
 evidence_type: Standards-guided protocol analysis
-reference_basis: 3GPP TS 38.300, TS 38.211, TS 38.212, TS 38.213, TS 38.321 and TS 38.331
+reference_basis: 3GPP TS 38.104, TS 38.300, TS 38.211, TS 38.212, TS 38.213, TS 38.321 and TS 38.331
 last_reviewed: 2026-09-06
 mermaid: true
 math: true
@@ -13,179 +13,548 @@ previous_title: Why QFI and DRB Are Separate
 previous_url: /5G/protocol-stack/qfi-vs-drb-sdap.html
 ---
 
-## 1. The entire journey in one picture
+## 1. Start from zero: what does a newly powered UE actually do?
 
-The Random Access procedure is often taught as four messages:
+A newly powered UE does **not** know the physical cell ID, system-frame number, SIB1 location, PRACH occasions, Msg1 preambles, RA-RNTI or a serving-cell C-RNTI.
+
+It cannot begin by asking the gNB for any of those things because it has not yet established a radio relationship with the gNB.
+
+What the UE *does* already know is the **3GPP-defined acquisition procedure** implemented in its modem:
+
+- which NR bands and bandwidths the hardware supports;
+- the synchronization-raster rules for candidate SS/PBCH block frequencies;
+- the mathematical definitions of every possible PSS and SSS sequence;
+- the time-frequency structure of an SS/PBCH block;
+- how PBCH and PBCH DM-RS are generated and mapped;
+- how MIB is decoded; and
+- the standardized tables used to derive initial PDCCH monitoring from the MIB.
+
+So the beginning of initial access is fundamentally a **known-pattern search problem**.
+
+At a simplified implementation level:
 
 ```text
-Msg1 → Msg2 → Msg3 → Msg4
-```
-
-That is useful, but it hides the most important part of initial access: **the UE cannot transmit Msg1 until it first discovers the cell and learns the common RACH configuration**.
-
-For an initially idle UE, the complete bootstrap is closer to:
-
-```text
-UE powers on / searches for a cell
-        ↓
-SSB
-├── PSS
-├── SSS
-├── PBCH
-└── PBCH DM-RS
-        ↓
+UE powers on
+    ↓
+select a band / frequency range to search
+    ↓
+tune to candidate SS/PBCH frequency positions
+from the 3GPP synchronization raster
+    ↓
+correlate received samples against the 3 known PSS candidates
+    ↓
+strong PSS correlation peak found
+    ↓
+obtain N_ID^(2) + a timing/frequency synchronization anchor
+    ↓
+correlate against the SSS candidate set for that N_ID^(2)
+    ↓
+obtain N_ID^(1)
+    ↓
+derive physical cell ID
+    ↓
+use the now-known SS/PBCH structure and PCI
+for PBCH-DMRS/PBCH hypotheses and decoding
+    ↓
+PBCH decoded
+    ↓
 MIB
-        ↓
+    ↓
 CORESET#0 / SearchSpace#0
-        ↓
-PDCCH carrying DCI for SIB1
-        ↓
+    ↓
+PDCCH: DCI 1_0 associated with SI-RNTI
+    ↓
 PDSCH carrying SIB1
-        ↓
-cell selection / camping
-        ↓
-RACH-ConfigCommon + PDCCH common configuration
-        ↓
-              RANDOM ACCESS STARTS
-        ↓
-Msg1: PRACH preamble
-        ↓
-RA-RNTI derived from the PRACH occasion
-        ↓
-monitor Type-1 PDCCH Common Search Space
-        ↓
-Msg2: PDCCH DCI 1_0 → PDSCH carrying RAR
-        ↓
-RAR gives Timing Advance + Msg3 UL Grant + Temporary C-RNTI
-        ↓
-Msg3: scheduled PUSCH, e.g. RRCSetupRequest on UL CCCH
-        ↓
-contention-resolution timer
-        ↓
-Msg4: contention resolution on DL
-        ↓
-Random Access success
-        ↓
-RRC establishment continues
+    ↓
+common cell + RACH configuration known
+    ↓
+UE can camp / access the cell as applicable
+    ↓
+             4-STEP RANDOM ACCESS
+    ↓
+Msg1 → Msg2/RAR → Msg3 → Msg4
 ```
 
-The important boundary is:
+This ordering is the key to understanding the rest of the article.
 
-> **SSB → MIB → SIB1 is not itself the four-step RACH procedure. It is the bootstrap that gives the UE enough information to start RACH correctly.**
+> **PSS and SSS are not arbitrary sequences that the gNB invents and tells the UE later. Their candidate sequences are defined by 3GPP and are already implemented in the UE. The UE finds them by correlation.**
 
-<div class="technical-callout">
-<p><strong>Scope.</strong> This article follows the ordinary <strong>contention-based 4-step Random Access</strong> path for initial access. NR also supports contention-free random access and 2-step random access. Those branches differ in important details and are not the main path here.</p>
-</div>
+A terminology point matters here: **PSS and SSS are physical signals; PBCH is a physical channel.** Together with PBCH DM-RS they occupy the SS/PBCH block, commonly called the SSB.
 
-## 2. Why does a UE need Random Access?
+### 1.1 The UE does not scan every possible subcarrier blindly
 
-Suppose the UE has found a cell and decoded SIB1, but has no active connected-mode radio relationship with the gNB.
+When the SS/PBCH position is not already explicitly known, NR defines a **synchronization raster** for system acquisition. Candidate SS/PBCH reference frequencies are represented by GSCN/SSREF values, with band-specific applicable raster entries.
 
-Several things are still missing:
+So conceptually the search is closer to:
 
 ```text
-gNB does not yet have a normal dedicated scheduling context for this access.
+candidate SSREF / GSCN #1
+    ↓
+look for a PSS correlation peak
+    ↓
+not found
 
-UE does not yet have a new established C-RNTI for this access.
+candidate SSREF / GSCN #2
+    ↓
+look for a PSS correlation peak
+    ↓
+not found
 
-The network needs the UE's uplink arrival timing well enough to align future UL transmissions.
-
-Several idle UEs may attempt access at the same time.
-
-The UE needs a way to obtain an initial scheduled PUSCH opportunity.
+candidate SSREF / GSCN #3
+    ↓
+strong PSS peak
+    ↓
+continue with SSS and PBCH acquisition
 ```
 
-Random Access therefore solves several problems at once:
+Commercial implementations can optimize this heavily using stored frequencies, operator information, previous camping history and parallel DSP processing, but the standards-level concept is that the UE looks for the synchronization block on valid synchronization-raster positions rather than needing prior dedicated signalling from the cell.
 
-1. give an unscheduled UE a standardized uplink entry point;
-2. let the gNB detect the UE's PRACH transmission and estimate timing;
-3. return a Timing Advance command;
-4. provide an initial PUSCH grant for Msg3;
-5. assign a temporary radio identity;
-6. carry identifying/signalling information in Msg3; and
-7. resolve collisions when two UEs selected the same contention-based resource.
+### 1.2 Why this bootstrap has to be predefined
 
-Random Access is also used in other situations—loss of UL synchronization, handover-related procedures, beam-failure recovery, PDCCH-order-triggered RA and others—but initial access is the cleanest way to understand the mechanism.
-
-## 3. Before RACH: how does the UE even find the cell?
-
-A newly powered UE does not begin by monitoring arbitrary PDCCHs. It first performs cell search and SS/PBCH acquisition.
-
-An SS/PBCH Block contains:
+Suppose PBCH required DCI before it could be decoded:
 
 ```text
-SSB
-├── PSS
-├── SSS
-├── PBCH
-└── PBCH DM-RS
+Need DCI to decode PBCH
+       ↑
+Need MIB to find initial PDCCH
+       ↑
+Need PBCH to obtain MIB
 ```
 
-At a physical implementation level:
+That is a circular dependency.
 
-- PSS and SSS are predefined synchronization sequences;
-- PSS/SSS processing lets the UE derive synchronization information and the physical cell identity;
-- PBCH uses a predefined bootstrap physical format rather than a dynamically selected PDSCH MCS; and
-- PBCH carries the MIB together with additional PBCH payload information.
-
-This is why the UE can acquire an SSB even though it does not yet know a PDSCH MCS, a dedicated BWP configuration or a C-RNTI.
-
-The bootstrap order deliberately avoids a circular dependency:
+NR avoids it by making the first acquisition stages deterministic from the specification:
 
 ```text
-PSS/SSS
-  ↓
-cell/timing knowledge
-  ↓
-PBCH
-  ↓
+known PSS/SSS candidates
+        ↓
+known SS/PBCH resource structure
+        ↓
+known PBCH bootstrap processing
+        ↓
 MIB
-  ↓
-initial PDCCH location
-  ↓
+        ↓
+initial PDCCH configuration
+        ↓
 SIB1
-  ↓
+        ↓
 fuller common configuration
 ```
 
-If the UE needed DCI before decoding PBCH, while needing PBCH before finding PDCCH, acquisition would be impossible.
+Only after this bootstrap does normal dynamically scheduled communication begin.
 
-## 4. What PSS and SSS give the UE
+## 2. PSS and SSS are already known by the UE: correlation is the search mechanism
 
-The physical cell identity is built from two synchronization-sequence identities:
+The important mental model is not:
+
+```text
+gNB sends PSS
+UE somehow "decodes" an unknown PSS
+```
+
+It is:
+
+```text
+3GPP defines a finite set of synchronization sequences
+        ↓
+UE stores/implements how to generate those sequences
+        ↓
+UE receives an unknown mixture of signal + channel distortion + noise
+        ↓
+UE correlates the received waveform against each allowed candidate
+        ↓
+large correlation peak identifies the most likely candidate and timing
+```
+
+### 2.1 PSS: only three candidate identities
+
+NR defines:
 
 \[
-N_{ID}^{cell} = 3N_{ID}^{(1)} + N_{ID}^{(2)}
+N_{ID}^{(2)} \in \{0,1,2\}
+\]
+
+Therefore there are only **three PSS sequence candidates**.
+
+Each PSS sequence contains **127 sequence elements**, and when placed inside the SS/PBCH block it occupies 127 consecutive subcarriers.
+
+The UE can conceptually generate:
+
+```text
+PSS candidate 0
+PSS candidate 1
+PSS candidate 2
+```
+
+and correlate each one against the received signal.
+
+A simplified correlation metric for candidate \(i\) is:
+
+\[
+C_i(\tau)=\left|\sum_{n=0}^{126} r[n+\tau]s_i^{*}[n]\right|
 \]
 
 where:
 
+- \(r[n]\) is the received complex signal;
+- \(s_i[n]\) is the known candidate PSS sequence;
+- \(^*\) denotes complex conjugation; and
+- \(\tau\) is a timing hypothesis.
+
+The UE searches for a strong peak over candidate identity and timing.
+
+For a deliberately simplified numerical picture:
+
 ```text
-N_ID2 ∈ {0,1,2}
-N_ID1 ∈ {0,...,335}
+maximum correlation with PSS 0 =   8.7
+maximum correlation with PSS 1 = 121.4   ← strong peak
+maximum correlation with PSS 2 =   6.2
 ```
 
-which produces 1008 physical cell IDs.
+The UE therefore identifies:
+
+```text
+N_ID^(2) = 1
+```
+
+and the location of the peak provides a synchronization anchor for where that PSS arrived.
+
+The real receiver is more sophisticated: carrier-frequency offset, channel gain, multipath, noise and implementation-specific detection thresholds all matter. But the core operation remains **correlation against standardized known candidates**.
+
+### 2.2 Why simple equality is not enough
+
+Over the air, the received sequence is not generally:
+
+```text
+received[n] == known[n]
+```
+
+Instead, even in a simple flat-channel model:
+
+\[
+r[n] = h\,s[n]e^{j2\pi \Delta f nT_s}+w[n]
+\]
+
+where the signal may be changed by:
+
+```text
+channel amplitude and phase h
+carrier-frequency offset Δf
+noise w[n]
+possible multipath / filtering
+```
+
+Therefore a test such as:
+
+```text
+received[n] / known[n] == 1
+```
+
+would fail in a real radio even when the correct PSS is present.
+
+Correlation is robust because the correct candidate adds coherently while unrelated candidates/noise tend not to.
+
+### 2.3 SSS: PSS narrows the next search
+
+After PSS detection the UE knows \(N_{ID}^{(2)}\). It then searches for the **Secondary Synchronization Signal**.
+
+NR defines:
+
+\[
+N_{ID}^{(1)} \in \{0,1,\ldots,335\}
+\]
+
+The SSS sequence also contains **127 elements**. Its generation depends on both \(N_{ID}^{(1)}\) and the already determined \(N_{ID}^{(2)}\).
+
+So, conceptually:
+
+```text
+PSS result:
+    N_ID^(2) = 1
+
+then test SSS hypotheses:
+    N_ID^(1) = 0
+    N_ID^(1) = 1
+    ...
+    N_ID^(1) = 335
+```
+
+Again, the UE uses correlation/detection metrics rather than waiting for a field that explicitly says "my cell identity is 301".
+
+Suppose the strongest SSS hypothesis is:
+
+```text
+N_ID^(1) = 100
+```
+
+Then the physical-layer cell identity is:
+
+\[
+N_{ID}^{cell}=3N_{ID}^{(1)}+N_{ID}^{(2)}
+\]
+
+Therefore:
+
+\[
+N_{ID}^{cell}=3(100)+1=301
+\]
+
+This is where the familiar PCI formula belongs in the procedure: **after the UE has actually detected the PSS and SSS identities from known standardized sequences**.
+
+Because:
+
+```text
+N_ID^(1): 336 possibilities
+N_ID^(2):   3 possibilities
+```
+
+NR has:
+
+\[
+336\times3=1008
+\]
+
+physical-layer cell identities:
+
+```text
+PCI = 0 ... 1007
+```
+
+The PCI is therefore **derived from synchronization-signal detection**; it is not simply transmitted as a normal field inside the MIB.
+
+## 3. The exact SS/PBCH block: 4 OFDM symbols × 240 contiguous subcarriers
+
+This is the structural detail that makes the acquisition flow concrete.
+
+3GPP TS 38.211 defines one SS/PBCH block as:
+
+```text
+TIME:       4 consecutive OFDM symbols
+            l = 0, 1, 2, 3 within the SSB
+
+FREQUENCY:  240 contiguous subcarriers
+            k = 0, 1, ... , 239 within the SSB
+```
+
+The 240 subcarriers correspond to:
+
+```text
+240 / 12 = 20 resource blocks
+```
+
+at the SSB subcarrier spacing.
+
+So an SSB is literally a **4-symbol × 240-subcarrier rectangular resource region**, with PSS, SSS, PBCH and PBCH DM-RS placed at standardized positions inside that rectangle.
+
+### 3.1 Exact PSS and SSS placement
+
+The synchronization signals each occupy 127 consecutive subcarriers:
+
+```text
+PSS:
+    OFDM symbol l = 0
+    subcarriers k = 56 ... 182
+
+SSS:
+    OFDM symbol l = 2
+    subcarriers k = 56 ... 182
+```
+
+Because:
+
+```text
+182 - 56 + 1 = 127
+```
+
+These are **fixed positions relative to the start of the SS/PBCH block**.
+
+The absolute RF frequency of the SSB can of course vary according to the band and synchronization-raster position, but once the UE hypothesizes an SSB location, the internal resource map is standardized.
+
+### 3.2 Exact four-symbol picture
+
+A useful resource-grid view is:
+
+```text
+Relative subcarrier k within the SSB
+
+        0          47 48   55 56                 182 183 191 192        239
+        |-----------| |-----| |-------------------| |------| |-----------|
+
+l = 0   ZERO / unused          PSS (127 SC)                    ZERO / unused
+        k=0..55                k=56..182                       k=183..239
+
+l = 1   PBCH + PBCH DM-RS across the 240-subcarrier SSB region
+
+l = 2   PBCH+DMRS   ZERO       SSS (127 SC)        ZERO       PBCH+DMRS
+        k=0..47     48..55     k=56..182           183..191   k=192..239
+
+l = 3   PBCH + PBCH DM-RS across the 240-subcarrier SSB region
+```
+
+More formally:
+
+| SSB symbol \(l\) | Standardized use |
+|---:|---|
+| 0 | PSS on \(k=56\ldots182\); remaining SSB REs in this symbol are set to zero as specified |
+| 1 | PBCH over \(k=0\ldots239\), excluding REs used by PBCH DM-RS |
+| 2 | SSS on \(k=56\ldots182\); PBCH in the outer regions \(k=0\ldots47\) and \(192\ldots239\); PBCH DM-RS in its defined REs; guard REs around SSS are set to zero |
+| 3 | PBCH over \(k=0\ldots239\), excluding REs used by PBCH DM-RS |
+
+PBCH DM-RS is interleaved with PBCH. Its comb offset depends on:
+
+\[
+v=N_{ID}^{cell}\bmod4
+\]
+
+which is one reason acquiring the PCI from PSS/SSS is important before reliable PBCH processing.
+
+### 3.3 Visualizing what the UE already knows before receiving anything
+
+Before seeing the cell, the UE already knows this **template**:
+
+```text
+symbol 0:        [          PSS          ]
+symbol 1: [------------- PBCH + DMRS -------------]
+symbol 2: [PBCH] [       SSS       ] [PBCH]
+symbol 3: [------------- PBCH + DMRS -------------]
+
+frequency extent of entire SSB = 240 contiguous subcarriers
+```
+
+It does not know yet:
+
+```text
+which candidate SSB frequency actually contains a cell
+which PSS candidate is present
+which SSS candidate is present
+what the PCI is
+which beam / SSB index hypothesis is the correct one
+what MIB says
+```
+
+But it absolutely knows **where PSS, SSS, PBCH and DM-RS would be relative to an SSB candidate if one is present**.
+
+That difference—known structure versus unknown instance—is the essence of initial synchronization.
+
+### 3.4 How wide is an SSB in frequency?
+
+The frequency width is simply:
+
+\[
+B_{SSB}=240\Delta f_{SSB}
+\]
+
+Examples:
+
+| SSB SCS | 240-subcarrier span |
+|---:|---:|
+| 15 kHz | 3.6 MHz |
+| 30 kHz | 7.2 MHz |
+| 120 kHz | 28.8 MHz |
+| 240 kHz | 57.6 MHz |
+
+The allowed SS/PBCH block SCS depends on the applicable NR band/frequency-range rules.
+
+The important invariant is not one fixed MHz width; it is the **240-subcarrier × 4-symbol standardized SSB structure**.
+
+### 3.5 PSS and SSS do not themselves span all four symbols
+
+Be careful with the wording:
+
+```text
+SSB spans 4 OFDM symbols.
+
+PSS occupies 1 of those symbols: l = 0.
+SSS occupies 1 of those symbols: l = 2.
+PBCH occupies resources in l = 1, 2 and 3.
+PBCH DM-RS is interleaved with PBCH resources.
+```
+
+So saying "PSS spans four symbols" would be wrong. The **SS/PBCH block** spans four symbols.
+
+## 4. Why can the UE decode PBCH without first knowing an MCS?
+
+This is another place where normal PDSCH intuition can mislead.
+
+For ordinary dynamically scheduled data:
+
+```text
+PDCCH / DCI
+    ↓
+tells UE time/frequency allocation + MCS + other scheduling information
+    ↓
+UE decodes PDSCH
+```
+
+PBCH cannot work that way because there is no initial PDCCH configuration yet.
+
+Instead, PBCH is itself part of the standardized bootstrap.
+
+The specification defines the PBCH processing chain and physical mapping, including standardized choices for concepts such as:
+
+```text
+PBCH payload construction
+scrambling rules
+channel coding / Polar coding
+rate matching
+QPSK modulation
+PBCH resource mapping
+PBCH DM-RS generation and placement
+```
+
+Therefore the UE does **not** need a dynamically signalled PDSCH MCS to decode PBCH.
 
 Conceptually:
 
 ```text
-PSS detection
+PSS correlation
     ↓
-N_ID2 + coarse timing/synchronization information
-
-SSS detection
+N_ID^(2), timing anchor
     ↓
-N_ID1
-
-combine
+SSS correlation
+    ↓
+N_ID^(1)
     ↓
 PCI
+    ↓
+known SS/PBCH resource map
+    ↓
+PBCH DM-RS / allowed SSB-index hypotheses
+    ↓
+channel estimation + PBCH demodulation
+    ↓
+PBCH decoding
+    ↓
+MIB + associated PBCH timing information
 ```
 
-The PCI is **not a field carried in the MIB**. It is derived from PSS/SSS processing.
+Depending on frequency range and the SS/PBCH-block set, the receiver may need to test allowed SS/PBCH block-index / DM-RS hypotheses. That is still a **finite standardized hypothesis search**, not an unknown dynamic MCS problem.
 
-Similarly, an SSB index is associated with which SS/PBCH block / beam was detected; it is not simply a normal MIB field.
+This gives the clean bootstrap chain:
+
+```text
+3GPP-defined synchronization raster
+        ↓
+known PSS candidates → correlation
+        ↓
+known SSS candidates → correlation
+        ↓
+PCI + SSB timing context
+        ↓
+predefined PBCH processing
+        ↓
+MIB
+        ↓
+initial PDCCH configuration
+        ↓
+DCI for SIB1
+        ↓
+PDSCH carrying SIB1
+        ↓
+RACH configuration
+```
+
+Only now is the UE ready to enter the ordinary four-step Random Access procedure.
 
 ## 5. What the MIB contains
 
@@ -219,7 +588,7 @@ The MIB ASN.1 field carries the specified most-significant part; additional PBCH
 
 ### `subCarrierSpacingCommon`
 
-This identifies the common SCS alternative relevant to the common channels. In FR1 the useful interpretation is the 15/30 kHz family; in FR2 it maps to the corresponding 60/120 kHz family.
+This identifies the common SCS alternative relevant to the common channels. In FR1 the useful interpretation is the 15/30 kHz family; in FR2 it maps to the corresponding common-channel alternatives.
 
 ### `ssb-SubcarrierOffset`
 
@@ -257,7 +626,7 @@ CORESET#0
 SearchSpace#0
 ```
 
-This is the first stage in answering:
+This answers the next bootstrap problem:
 
 > **How does a UE know which PDCCH to monitor if it has never been configured by dedicated RRC signalling?**
 
@@ -308,9 +677,9 @@ what type of SearchSpace this is
 A useful memory aid is:
 
 ```text
-CORESET    = WHERE PDCCH can physically be mapped
+CORESET     = WHERE PDCCH can physically be mapped
 SearchSpace = WHEN and WHICH PDCCH candidates the UE should attempt
-RNTI       = WHO / WHICH PROCEDURE the successfully decoded DCI belongs to
+RNTI        = WHO / WHICH PROCEDURE the successfully decoded DCI belongs to
 ```
 
 ## 8. Blind PDCCH decoding
@@ -377,8 +746,8 @@ So the UE first learns *how to receive the data channel* from DCI, then decodes 
 This is the second bootstrap layer:
 
 ```text
-MIB tells UE where to look for control.
-Control tells UE where to receive SIB1.
+MIB tells UE where to look for initial control.
+Control tells UE where/how to receive SIB1.
 SIB1 tells UE how the cell operates, including how Random Access is configured.
 ```
 
@@ -471,7 +840,7 @@ SSB index 3
 
 and the cell configuration maps SSB 3 to a defined set of RACH occasions/preambles.
 
-Then:
+Then conceptually:
 
 ```text
 SSB 0 → one configured RO/preamble association
@@ -494,7 +863,7 @@ For a simple example, assume contention-based preambles are:
 0 ... 63
 ```
 
-The UE randomly chooses:
+The UE selects:
 
 ```text
 PREAMBLE_INDEX = 37
@@ -506,7 +875,7 @@ If that happens, there is no coordination preventing the collision at Msg1.
 
 ## 15. Msg1: PRACH has no preceding dynamic UL grant
 
-Suppose the UE needs access at slot 15 and determines:
+Suppose the UE needs access and determines:
 
 ```text
 next valid RACH occasion:
@@ -526,7 +895,7 @@ UE ------------------------------------------> gNB
                   preamble 37
 ```
 
-The critical interview distinction is:
+The critical distinction is:
 
 ```text
 Msg1 / PRACH
@@ -534,24 +903,14 @@ Msg1 / PRACH
     resource comes from common RACH configuration
 
 Msg3 / PUSCH
-    YES: dynamically scheduled by the UL grant received in the RAR
+    dynamically scheduled by the UL grant received in Msg2/RAR
 ```
 
 ## 16. PRACH transmit power and power ramping
 
 The UE must also determine Msg1 transmit power.
 
-A useful high-level representation is:
-
-\[
-P_{PRACH} = \min\left(P_{CMAX}, P_{target} + PL\right)
-\]
-
-where:
-
-- \(P_{CMAX}\) is the UE's applicable maximum transmit power;
-- \(PL\) is the UE's downlink-based path-loss estimate; and
-- \(P_{target}\) represents the configured PRACH target receive-power state including applicable offsets and ramping.
+At a high level, the UE targets the configured PRACH receive-power state after accounting for estimated downlink path loss, while respecting its maximum transmit-power limit.
 
 Illustrative example:
 
@@ -559,10 +918,10 @@ Illustrative example:
 configured target receive power = -100 dBm
 estimated path loss             = 115 dB
 
-approximate required TX power   = 15 dBm
+rough required TX level         ≈ 15 dBm
 ```
 
-subject to the UE power limit and the exact standardized formula.
+subject to the exact standardized procedure and UE power constraints.
 
 If attempts fail, the configured `powerRampingStep` can increase the target for subsequent preamble transmissions.
 
@@ -620,8 +979,6 @@ If two UEs use the same RACH occasion, they calculate the same RA-RNTI.
 
 ## 19. After Msg1, how does the UE know which PDCCH to monitor?
 
-This was one of the key questions in our discussion.
-
 SIB1's common downlink control configuration can provide `ra-SearchSpace` for Random Access Response monitoring.
 
 The chain is:
@@ -653,28 +1010,25 @@ RA-RNTI
     → which decoded DCI belongs to my Random Access occasion?
 ```
 
-The RNTI does not magically tell the UE the physical location of PDCCH. The SearchSpace does the narrowing; the RNTI validates the procedure/addressing context.
+The RNTI does not tell the UE the physical location of PDCCH. The SearchSpace narrows the location/candidates; the RNTI validates the procedure/addressing context.
 
 ## 20. The RAR response window
 
-After transmitting Msg1, the UE begins the RAR waiting procedure according to `ra-ResponseWindow` and the applicable PDCCH monitoring occasions.
+After transmitting Msg1, the UE performs RAR monitoring according to `ra-ResponseWindow` and the applicable Type-1 PDCCH Common Search Space monitoring occasions.
 
 A simplified example:
 
 ```text
-Msg1 transmitted in slot 20
+Msg1 transmitted around slot 20
 
-RAR response interval considered here:
-slot 21 ... slot 28
-
-configured Type-1 CSS monitoring occasions:
+configured response interval contains monitoring occasions at:
 slot 21
 slot 23
 slot 25
 slot 27
 ```
 
-Then the UE may conceptually do:
+The UE may conceptually do:
 
 ```text
 slot 21 → blind-decode configured PDCCH candidates
@@ -685,11 +1039,11 @@ slot 25 → try again
 slot 27 → try again
 ```
 
-The exact standard timing is defined in terms of the configured response window and the relevant PDCCH monitoring occasions; the important concept is that the UE is **not blindly decoding every PDCCH resource in every slot**.
+The exact start/end timing follows the standardized response-window rules; the key concept is that the UE is **not blindly decoding every PDCCH resource in every slot**.
 
 ## 21. What exactly is the UE looking for on PDCCH?
 
-For the ordinary RAR path, the UE attempts to detect the appropriate **DCI format 1_0 associated with the corresponding RA-RNTI** in the Type-1 PDCCH Common Search Space.
+For the ordinary RAR path, the UE attempts to detect the appropriate **DCI format 1_0 whose CRC is associated with the corresponding RA-RNTI** in the Type-1 PDCCH Common Search Space.
 
 Conceptually:
 
@@ -838,8 +1192,6 @@ The TA command therefore establishes/adjusts the uplink timing relationship need
 
 ## 26. Where exactly does the UE get the Msg3 TX grant?
 
-This is the key contrast:
-
 > **The UL grant for Msg3 is carried inside the Random Access Response.**
 
 The RAR UL grant contains the information needed to configure the initial Msg3 PUSCH transmission. At a high level it represents fields for concepts such as:
@@ -865,8 +1217,6 @@ Msg1:
 Msg3:
     PUSCH resource is determined from the UL grant in Msg2/RAR
 ```
-
-That distinction should be interview-ready.
 
 ## 27. Temporary C-RNTI
 
@@ -970,7 +1320,7 @@ same preamble
 same RAPID
 ```
 
-The gNB may detect one preamble 37 event and send one RAR:
+The gNB may detect one preamble-37 event and send one RAR:
 
 ```text
 RAPID = 37
@@ -1038,8 +1388,6 @@ That is exactly what contention resolution does.
 
 ## 32. Where the 48-bit Msg4 contention identity comes from
 
-This is one of the most subtle parts of the procedure.
-
 For the initial-access case where Msg3 contains an UL CCCH SDU, the gNB does **not invent a new random 48-bit value**.
 
 It uses:
@@ -1095,13 +1443,13 @@ encoded RRCSetupRequest / UL CCCH SDU
 +---------------------------------------------------+
 ```
 
-MAC does not have to parse the RRC meaning of those bits. It simply preserves/compares the first 48 bits of the CCCH SDU as specified for contention resolution.
+MAC does not have to parse the RRC meaning of those bits. It preserves/compares the first 48 bits of the CCCH SDU as specified for contention resolution.
 
 This is a clean cross-layer contract:
 
 ```text
 RRC understands the semantic UE identity.
-MAC understands the byte/bit sequence it transmitted in Msg3.
+MAC understands the bit sequence transmitted in Msg3.
 ```
 
 ## 34. Bit-level contention-resolution example
@@ -1361,43 +1709,35 @@ Without backoff, a group of colliding UEs could repeatedly retransmit together a
 
 ## 42. Identity progression through the whole procedure
 
-This is one of the best interview summaries:
-
 ```text
 Before Random Access
 ────────────────────────────────────
 No newly established dedicated C-RNTI for this access
-
 
 Msg1 / RAR monitoring
 ────────────────────────────────────
 RA-RNTI
     identifies the PRACH occasion / RAR context
 
-
 RAR MAC PDU
 ────────────────────────────────────
 RAPID
     identifies the response to a detected preamble
-
 
 Successful RAR
 ────────────────────────────────────
 Temporary C-RNTI
     temporary radio identity while contention is unresolved
 
-
 Msg3
 ────────────────────────────────────
 UL CCCH SDU / RRCSetupRequest
     carries UE-specific request content
 
-
 Msg4
 ────────────────────────────────────
 UE Contention Resolution Identity
     = first 48 bits of successfully decoded Msg3 UL CCCH SDU
-
 
 Random Access Success
 ────────────────────────────────────
@@ -1408,14 +1748,23 @@ Each identity solves a different ambiguity.
 
 ## 43. A complete numerical-style single-UE example
 
-Assume the UE has acquired:
+Assume cell search produced:
 
 ```text
-PCI = 301
-selected SSB index = 2
+PSS winner:
+    N_ID^(2) = 1
+
+SSS winner:
+    N_ID^(1) = 100
+
+PCI:
+    3 × 100 + 1 = 301
+
+selected SSB index / beam context:
+    2
 ```
 
-It decodes MIB, finds CORESET#0/SearchSpace#0, receives SIB1 and becomes ready for access.
+The UE then decodes PBCH/MIB, finds CORESET#0/SearchSpace#0, receives SIB1 and becomes ready for access.
 
 For illustration, assume SIB1/common configuration effectively gives:
 
@@ -1571,7 +1920,7 @@ Both transmit on grant G:
 
 ```text
 UE A Msg3 ───┐
-              ├──> gNB
+             ├──> gNB
 UE B Msg3 ───┘
 ```
 
@@ -1644,7 +1993,7 @@ RACH spans multiple layers.
 RRC broadcasts/configures much of the common information needed to execute access:
 
 ```text
-SIB1
+MIB/SIB1-related system information
 RACH-ConfigCommon
 PDCCH common configuration
 other initial-access parameters
@@ -1672,7 +2021,9 @@ contention-resolution success/failure
 PHY executes the physical transmissions/receptions:
 
 ```text
-SS/PBCH acquisition
+synchronization-raster / SS/PBCH search
+PSS/SSS correlation and synchronization
+PBCH/PBCH-DMRS processing
 PDCCH/PDSCH reception
 PRACH generation/detection
 PUSCH transmission/reception
@@ -1680,11 +2031,44 @@ Timing Advance application
 power-control behavior
 ```
 
-So RACH is neither "just MAC" nor "just PHY". It is a cross-layer procedure involving RRC configuration, MAC control state and PHY execution.
+So RACH is neither "just MAC" nor "just PHY". Initial access is a cross-layer chain involving PHY acquisition, RRC common configuration, MAC Random Access state and PHY execution.
 
-## 47. Common interview traps
+## 47. Common conceptual traps
 
-### Trap 1: "UE gets an UL grant before Msg1"
+### Trap 1: "The UE does not know PSS/SSS until the gNB tells it"
+
+Wrong.
+
+The allowed PSS/SSS sequences and their generation are standardized. The UE correlates the received waveform against those known candidates to determine which sequence is present.
+
+### Trap 2: "PSS and SSS span the whole four-symbol SSB"
+
+Wrong.
+
+```text
+SSB = 4 OFDM symbols × 240 subcarriers
+PSS = symbol 0, subcarriers 56...182
+SSS = symbol 2, subcarriers 56...182
+PBCH/DM-RS occupy the remaining standardized PBCH resources
+```
+
+### Trap 3: "The PCI formula itself explains how the UE discovers the cell"
+
+Incomplete.
+
+First the UE detects \(N_{ID}^{(2)}\) from PSS and \(N_{ID}^{(1)}\) from SSS. **Then** it evaluates:
+
+\[
+N_{ID}^{cell}=3N_{ID}^{(1)}+N_{ID}^{(2)}
+\]
+
+### Trap 4: "PBCH needs DCI/MCS signalling first"
+
+Wrong.
+
+PBCH is a predefined bootstrap channel with standardized coding, modulation, DM-RS and resource mapping. That is precisely why it can deliver the MIB before initial PDCCH configuration exists.
+
+### Trap 5: "UE gets an UL grant before Msg1"
 
 Wrong for contention-based Msg1.
 
@@ -1693,23 +2077,15 @@ Msg1 uses configured PRACH opportunities.
 Msg3 uses the UL grant inside RAR.
 ```
 
-### Trap 2: "RA-RNTI identifies the UE"
+### Trap 6: "RA-RNTI identifies the UE"
 
-No.
+No. RA-RNTI identifies the PRACH occasion/RAR context. Multiple UEs in the same RO share it.
 
-```text
-RA-RNTI identifies the PRACH occasion/RAR context.
-```
+### Trap 7: "RAPID is the UE identity"
 
-Multiple UEs in the same RO share it.
+No. RAPID corresponds to the transmitted PRACH preamble index. Two UEs can choose the same preamble.
 
-### Trap 3: "RAPID is the UE identity"
-
-No.
-
-RAPID corresponds to the transmitted PRACH preamble index. Two UEs can choose the same preamble.
-
-### Trap 4: "PDCCH carries RAR"
+### Trap 8: "PDCCH carries RAR"
 
 Not directly.
 
@@ -1719,13 +2095,11 @@ DCI schedules PDSCH.
 PDSCH carries the RAR MAC PDU.
 ```
 
-### Trap 5: "MIB contains all RACH configuration"
+### Trap 9: "MIB contains all RACH configuration"
 
-No.
+No. MIB mainly bootstraps initial control-channel discovery. SIB1/common configuration gives the UE the Random Access configuration.
 
-MIB mainly bootstraps initial control-channel discovery. SIB1/common configuration gives the UE the Random Access configuration.
-
-### Trap 6: "Msg4's 48-bit identity is the 39-bit RRC randomValue padded"
+### Trap 10: "Msg4's 48-bit identity is the 39-bit RRC randomValue padded"
 
 No.
 
@@ -1735,21 +2109,17 @@ For the initial CCCH-based contention-resolution path:
 Msg4 contention identity = first 48 bits of the Msg3 UL CCCH SDU
 ```
 
-### Trap 7: "Camped means connected"
+### Trap 11: "Camped means connected"
 
-No.
+No. A UE can be camped in idle mode with no active connected-mode scheduling context.
 
-A UE can be camped in idle mode with no active connected-mode scheduling context.
+## 48. One compact summary of the entire 4-step procedure
 
-## 48. One compact interview answer for the entire 4-step procedure
-
-A strong concise answer is:
-
-> "Before contention-based four-step RACH, the UE first acquires SSB, decodes MIB, uses `pdcch-ConfigSIB1` to derive CORESET#0/SearchSpace#0, and receives SIB1. SIB1 gives the common PRACH and RAR-monitoring configuration. When access is triggered, the UE chooses an SSB-associated PRACH occasion and contention-based preamble and transmits Msg1 without a dedicated dynamic UL grant. Both UE and gNB derive the RA-RNTI from that PRACH occasion. During the configured RAR response window, the UE monitors the configured Type-1 Common Search Space and blind-decodes DCI 1_0 associated with that RA-RNTI. The DCI schedules PDSCH carrying the RAR MAC PDU. The UE finds the RAR entry whose RAPID matches its transmitted preamble. That RAR provides Timing Advance, a 27-bit UL grant for Msg3 and a Temporary C-RNTI. The UE applies TA and sends Msg3 on PUSCH using that grant, commonly carrying an RRCSetupRequest for initial establishment. After Msg3 it waits for contention resolution. If two UEs used the same RO and same preamble they may have accepted the same RAR, same grant and same TC-RNTI, so Msg4 resolves the contention. For the initial UL-CCCH path, the UE Contention Resolution Identity MAC CE contains the first 48 bits of the successfully decoded Msg3 UL CCCH SDU. The UE whose stored Msg3 prefix matches succeeds; the other eventually retries."
+> A UE begins initial access by searching candidate SS/PBCH positions defined by the NR synchronization raster. The PSS and SSS candidate sequences are already defined by 3GPP and implemented in the UE, so the receiver correlates its incoming waveform against the three PSS candidates, obtains \(N_{ID}^{(2)}\) and a synchronization anchor, then correlates against the SSS candidate set to obtain \(N_{ID}^{(1)}\). It derives the PCI as \(N_{ID}^{cell}=3N_{ID}^{(1)}+N_{ID}^{(2)}\). The SS/PBCH block itself is a standardized rectangle of four OFDM symbols and 240 contiguous subcarriers: PSS occupies symbol 0 on subcarriers 56–182, SSS occupies symbol 2 on the same 127 relative subcarriers, and PBCH/PBCH-DMRS occupy their defined resources in symbols 1–3. Because PBCH coding, QPSK modulation, DM-RS and resource mapping are predefined, the UE can decode PBCH without first receiving a dynamic MCS. PBCH gives the MIB; `pdcch-ConfigSIB1` then lets the UE derive CORESET#0/SearchSpace#0, find DCI 1_0 associated with SI-RNTI and decode PDSCH carrying SIB1. SIB1 provides the common PRACH and RAR-monitoring configuration. When Random Access is triggered, the UE chooses an SSB-associated RACH occasion and contention-based preamble and transmits Msg1 without a dedicated UL grant. UE and gNB derive the same RA-RNTI from that PRACH occasion. The UE monitors the configured Type-1 Common Search Space during the RAR response procedure and detects DCI 1_0 associated with that RA-RNTI; the DCI schedules PDSCH carrying the RAR MAC PDU. A RAR entry whose RAPID matches the transmitted preamble gives Timing Advance, the 27-bit Msg3 UL grant and a Temporary C-RNTI. The UE applies TA and transmits Msg3 on scheduled PUSCH, commonly carrying an `RRCSetupRequest` on UL CCCH for initial establishment. If two UEs selected the same RO and the same preamble, both can accept the same RAR and use the same Msg3 grant/TC-RNTI. Msg4 therefore resolves contention: for the initial UL-CCCH path, the UE Contention Resolution Identity MAC CE carries the first 48 bits of the successfully decoded Msg3 UL CCCH SDU. The UE whose stored Msg3 prefix matches succeeds; the other follows the failure/retry procedure.
 
 ## 49. The three filters for RAR reception
 
-If only one memory aid survives, use this:
+If only one Random Access memory aid survives, use this:
 
 ```text
 SearchSpace / CORESET
@@ -1781,28 +2151,58 @@ Which same-preamble UE actually won contention?
 
 Primary specifications for the procedure:
 
+- **3GPP TS 38.104** — NR RF requirements including the synchronization raster, SSREF/GSCN definitions and band-specific synchronization-raster entries.
 - **3GPP TS 38.300** — NR/NG-RAN architecture and overall Random Access context.
-- **3GPP TS 38.211** — SS/PBCH, PRACH and physical-channel/resource definitions.
-- **3GPP TS 38.212** — physical-channel coding, DCI and CRC/RNTI processing.
-- **3GPP TS 38.213** — PDCCH monitoring, common SearchSpaces, Random Access physical-layer procedures and RAR UL-grant interpretation.
-- **3GPP TS 38.321** — MAC Random Access procedure, RA-RNTI-related behavior, RAR processing, RAPID, Backoff Indicator, Temporary C-RNTI, contention-resolution timer and UE Contention Resolution Identity MAC CE.
+- **3GPP TS 38.211** — PSS/SSS generation, the exact 4-symbol × 240-subcarrier SS/PBCH resource map, PBCH DM-RS, PRACH and physical-channel definitions.
+- **3GPP TS 38.212** — PBCH/DCI physical-channel coding and CRC/RNTI-related processing.
+- **3GPP TS 38.213** — SS/PBCH monitoring context, PDCCH monitoring, common SearchSpaces, Random Access physical-layer procedures and RAR UL-grant interpretation.
+- **3GPP TS 38.321** — MAC Random Access procedure, RA-RNTI behavior, RAR processing, RAPID, Backoff Indicator, Temporary C-RNTI, contention-resolution timer and UE Contention Resolution Identity MAC CE.
 - **3GPP TS 38.331** — MIB, SIB1, `pdcch-ConfigSIB1`, `PDCCH-ConfigCommon`, SearchSpace and RACH common configuration, plus `RRCSetupRequest` and its initial UE identity.
 
 Useful ETSI publications:
 
+- TS 38.104 Release 18: <https://www.etsi.org/deliver/etsi_ts/138100_138199/138104/18.07.00_60/ts_138104v180700p.pdf>
+- TS 38.211 Release 17: <https://www.etsi.org/deliver/etsi_ts/138200_138299/138211/17.08.00_60/ts_138211v170800p.pdf>
 - TS 38.331 Release 18: <https://www.etsi.org/deliver/etsi_ts/138300_138399/138331/18.08.00_60/ts_138331v180800p.pdf>
 - TS 38.321 Release 18: <https://www.etsi.org/deliver/etsi_ts/138300_138399/138321/18.04.00_60/ts_138321v180400p.pdf>
 - TS 38.213 Release 18: <https://www.etsi.org/deliver/etsi_ts/138200_138299/138213/18.05.00_60/ts_138213v180500p.pdf>
 
-The central design idea is that NR initial access is a staged reduction of uncertainty:
+The entire initial-access chain can now be read as a staged reduction of uncertainty:
 
 ```text
-SSB tells the UE which cell it found.
-MIB tells it how to find initial control.
-SIB1 tells it how to attempt Random Access.
-PRACH occasion gives both sides an RA-RNTI context.
-RAPID selects the preamble response.
-RAR supplies timing, a Msg3 grant and a temporary identity.
-Msg3 supplies UE-specific signalling content.
-Msg4 finally resolves same-preamble contention.
+Synchronization raster
+    → where can an SSB plausibly be?
+
+PSS correlation
+    → which N_ID^(2), and where is the synchronization peak?
+
+SSS correlation
+    → which N_ID^(1)?
+
+PCI + standardized SSB structure
+    → how do I process PBCH/DM-RS?
+
+PBCH / MIB
+    → how do I find initial PDCCH?
+
+PDCCH / SIB1
+    → how is this cell, including RACH, configured?
+
+PRACH occasion
+    → common entry point for an unscheduled UE
+
+RA-RNTI
+    → which RAR context belongs to this RO?
+
+RAPID
+    → which RAR entry corresponds to my preamble?
+
+RAR
+    → timing + Msg3 grant + temporary identity
+
+Msg3
+    → UE-specific signalling content
+
+Msg4
+    → which same-preamble UE actually won contention?
 ```
